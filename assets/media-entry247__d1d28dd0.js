@@ -1,0 +1,1 @@
+addEventListener('DOMContentLoaded',()=>{const params=new URLSearchParams(location.search);if(params.get('mode')==='tv')document.getElementById('tvTab')?.click();if(params.get('settings')==='1')document.getElementById('appsTab')?.click();});

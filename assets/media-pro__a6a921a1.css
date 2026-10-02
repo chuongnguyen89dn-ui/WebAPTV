@@ -1,0 +1,39 @@
+/* Layered bevels stay inside the panel: no overlays intercept video or touch. */
+.split-shell{border:2px solid #45566c!important;box-shadow:inset 0 1px 1px #dcecff99,inset 0 -2px 3px #000,0 0 0 1px #050a11!important;background:linear-gradient(135deg,#172536,#020814 45%,#112032)!important}
+.split-shell.with-media-nav{grid-template-rows:54px minmax(0,1fr) 46px!important;gap:6px!important;padding:6px!important}
+.media-nav{display:flex;align-items:stretch;gap:10px;min-width:0;padding:1px 4px;background:linear-gradient(165deg,#183b6266,#020b19);border-radius:12px;border:1px solid #739cc43b;box-shadow:inset 0 1px #c9eeff42,0 3px 8px #0008}
+.media-brand{display:flex;align-items:center;gap:6px;font-size:20px;font-weight:900;font-style:italic;letter-spacing:1px;margin-right:auto;padding:0 8px;text-shadow:0 2px 2px #000;min-width:0}.media-brand img{width:28px;height:28px}
+.split-shell .media-nav button{height:50px;min-height:48px;min-width:96px;font-size:18px;padding:4px 18px;flex:none;border-radius:12px;background:linear-gradient(165deg,#35587bba,#10294bc9 40%,#061629);border:1px solid #648db6;box-shadow:inset 0 2px 2px #d1edff55,inset 0 -3px 4px #0009,0 3px 4px #000b;color:#eefaff;text-shadow:0 2px 2px #000}
+.split-shell .media-nav button[aria-pressed=true]{background:linear-gradient(150deg,#7f273d,#301426 70%);border-color:#f3567188;box-shadow:inset 0 1px 2px #ffd3df66,inset 0 -3px 3px #0008,0 0 8px #ff28442a}
+.split-shell .media-nav button:active{transform:translateY(2px);box-shadow:inset 0 2px 5px #000a}
+.with-media-nav .drive-dock #optionsBtn,.with-media-nav .drive-dock .home{display:none!important}
+.with-media-nav .drive-dock{justify-content:flex-end}
+.video-panel,.netflix-panel,.clock-card,.speed-card,.tv-panel,.mini-map-card{border:1px solid #5db4dd!important;border-radius:17px!important;box-shadow:inset 0 2px 2px #d3f7ff80,inset 2px 0 3px #3ea8da66,inset -2px -3px 5px #000b,0 0 0 2px #081220,0 3px 8px #0009,0 0 8px #00adff21!important}
+.video-panel,.tv-panel{background:linear-gradient(155deg,#163354,#061326 30%,#020a17 85%,#143149)!important}
+.tv-panel{display:flex;flex-direction:column;min-width:0;min-height:0;padding:12px;overflow:hidden;color:#eff8ff}
+.tv-head,.tv-toolbar{display:flex;align-items:center;gap:8px;flex:none;margin-bottom:8px}.tv-head{justify-content:space-between}.tv-head strong{font-size:20px}.tv-panel button,.tv-panel select{min-height:48px;font-size:16px;border-radius:12px;border:1px solid #6d9ec1;background:linear-gradient(160deg,#355e7c,#07192e);color:#fff;box-shadow:inset 0 2px 2px #c2e4ff50,inset 0 -2px 3px #0009,0 3px 4px #0008;padding:8px 12px}.tv-toolbar select{flex:1;min-width:0;max-width:100%}.tv-toolbar label{font-size:15px}.tv-screen{flex:1;min-height:0;display:flex;background:#02050a;border:1px solid #719cba55;border-radius:10px;overflow:hidden}.tv-screen video{width:100%;height:100%;min-height:0;object-fit:contain}#tvStatus{font-size:15px;line-height:1.4;margin:8px 0 0;flex:none;max-height:4.2em;overflow:auto}
+.tv-panel.tv-expanded{position:fixed;z-index:1001;left:var(--visible-x,0px);top:var(--visible-y,0px);width:var(--visible-w,100vw);height:var(--visible-h,100dvh);padding:8px;max-height:none}.tv-expanded .tv-toolbar{display:none}
+@media(max-width:900px){.media-brand{font-size:16px;padding:0 4px}.media-brand img{width:24px}.split-shell .media-nav button{min-width:80px;padding:4px 12px;font-size:16px}.media-nav{gap:6px}.tv-panel{padding:8px}}
+@media(max-width:560px) and (orientation:portrait){.split-shell.with-media-nav{grid-template-rows:54px auto 46px!important}.media-brand{font-size:0;gap:0;padding:0}.media-brand img{width:26px}.media-nav{gap:5px}.split-shell .media-nav button{min-width:72px;padding:4px 10px}.tv-panel{height:400px}.tv-panel.tv-expanded{height:var(--visible-h,100dvh)}}
+@media(max-height:550px) and (min-width:561px){.with-media-nav .instruments{grid-template-rows:minmax(150px,.9fr) minmax(185px,1.1fr);gap:7px}.with-media-nav .video-head strong{font-size:20px}.with-media-nav .video-panel{padding:8px}.tv-head strong{font-size:18px}.tv-toolbar label{display:none}}
+body.widgets-left .tv-panel{grid-column:2;grid-row:1}
+@media(max-width:560px) and (orientation:portrait){body.widgets-left .tv-panel{grid-column:auto;grid-row:auto}}
+/* Use the remaining panel height, so the GPS controls stay reachable with the new header. */
+@media(min-width:561px){
+ .with-media-nav .instruments{grid-template-rows:minmax(155px,.4fr) minmax(225px,.6fr);gap:8px}
+ .with-media-nav .speed-card[data-gps]{min-height:0;padding:8px;overflow:hidden}
+ .with-media-nav .speed-card[data-gps] .speed-top{min-height:44px;flex:none}
+ .with-media-nav .speed-card[data-gps] .metrics{min-height:50px;flex:1 1 0;gap:0;padding:0 0 24px;justify-content:center}
+ .with-media-nav .speed-card[data-gps=ring] .speed-dial{width:var(--compact-dial,170px);max-width:90%;flex:none}
+ .with-media-nav .speed-card[data-gps=ring] .speed-value strong{font-size:clamp(22px,calc(var(--compact-dial,170px)*.19),48px)}
+ .with-media-nav .speed-card[data-gps=ring] .trip-value{bottom:0}
+ .with-media-nav .speed-card[data-gps=ring] .trip-value strong{font-size:22px}
+ .with-media-nav .speed-card #gpsStatus{min-height:16px;font-size:10px;line-height:1.2;margin:3px 0;padding:2px 4px;flex:none}
+ .with-media-nav .speed-card .gps-actions{flex:none;flex-wrap:nowrap;gap:4px}
+ .with-media-nav .speed-card .gps-actions button{min-height:44px;height:44px;padding:4px 5px;font-size:12px}
+ .with-media-nav .clock-card[data-clock=aurora] .clock-content{min-height:70px;margin-top:28px}
+ .with-media-nav .clock-card[data-clock=aurora] .clock-info{top:4%;right:3%}
+ .with-media-nav .clock-card[data-clock=aurora].weather-ready .weather-line{right:8px;bottom:8px}
+ .with-media-nav .clock-card:has(.forecast-strip:not([hidden])).weather-ready .weather-line{bottom:60px}
+ .with-media-nav .clock-card[data-clock=aurora] .weather-reading{bottom:3%}
+}

@@ -1,0 +1,59 @@
+/* Raised instruments use local SVG/CSS; all readings remain live DOM values. */
+.clock-card,.speed-card{border:1px solid #66cfff80;box-shadow:inset 0 1px 2px #dcfaff85,inset 0 -3px 7px #0008,0 7px 18px #0005;container-type:inline-size;border-radius:18px}
+.clock-card[data-clock=aurora]{background-image:linear-gradient(180deg,#001d5240,#00214b10 60%,#00142c90),url('scene-alpine-3d.svg')}
+.speed-card[data-gps=ring]{background-image:linear-gradient(#04152920,#04152945),url('scene-drive-3d.svg')}
+.clock-card:after,.speed-card:after{content:'';position:absolute;inset:1px;border-radius:inherit;pointer-events:none;z-index:0;background:linear-gradient(125deg,#fff2,transparent 26%,transparent 72%,#48bcff0b);border-top:1px solid #c6f4ff60}
+.clock-card>*,.speed-card>*{position:relative;z-index:1}
+.clock-head,.speed-top{color:#b6f6ff;letter-spacing:.1em;font-weight:650}
+.clock-content{flex-direction:row;justify-content:space-evenly;gap:12px;min-height:105px}
+.clock-content #digitalClock{color:#f7fbff;font-weight:750;letter-spacing:-.04em;text-shadow:0 2px 0 #4488c6,0 4px 8px #002951,0 0 20px #92dfff66}
+.clock-info{flex-shrink:1;min-width:0}#calendarDate{color:#eef6ff;line-height:1.4}
+.clock-face{background:radial-gradient(circle at 30% 20%,#27618abf,#05152eee 70%);border:2px solid #91d5f7;box-shadow:inset 0 0 0 4px #122d50,inset 3px 6px 12px #000b,0 3px 0 #163553,0 8px 15px #0008,0 0 18px #45c5fb55;transform:perspective(600px) rotateX(6deg);padding:5px}
+.clock-card[data-clock=aurora] .clock-face{display:none}
+.weather-orb{position:relative;width:112px;aspect-ratio:1;flex:none;filter:drop-shadow(0 9px 9px #00254f70);display:none}
+.clock-card[data-clock=aurora] .weather-orb{display:block}
+.orb-sun{position:absolute;width:66%;height:66%;left:25%;top:4%;border-radius:50%;background:radial-gradient(circle at 35% 28%,#fffce1 3%,#fff6aa 28%,#ffcb52 64%,#ee9c27 85%);box-shadow:inset 0 2px 3px #fff,0 0 8px #ffe697,0 0 30px #ffd965b3}
+.orb-cloud{position:absolute;left:3%;top:51%;width:86%;height:35%;border-radius:40px;background:linear-gradient(#fff,#cdefff 45%,#77b4e0);box-shadow:inset 0 -4px 6px #4585c970,0 5px 10px #11478055}
+.orb-cloud:before,.orb-cloud:after{content:'';position:absolute;background:linear-gradient(145deg,#fff,#d9f4ff 65%,#9bceef);border-radius:50%;width:55%;height:140%;left:20%;bottom:10%;z-index:-1}.orb-cloud:after{width:37%;height:100%;left:58%}
+.orb-rain{display:none;position:absolute;top:78%;left:20%;color:#9eeeff;font-weight:bold;font-size:22px;text-shadow:0 0 8px #09d0ff}
+.orb-unknown{display:none;font-size:80px;line-height:1.2;text-align:center;color:#c8edff;text-shadow:0 0 15px #a9daff}
+[data-weather=unknown] .orb-sun,[data-weather=unknown] .orb-cloud{display:none}[data-weather=unknown] .orb-unknown{display:block}
+[data-weather=clear] .orb-cloud{display:none}[data-weather=rain] .orb-sun,[data-weather=snow] .orb-sun,[data-weather=fog] .orb-sun{display:none}[data-weather=rain] .orb-rain{display:block}[data-weather=snow] .orb-rain{display:block;font-size:0}[data-weather=snow] .orb-rain:after{content:'❄';font-size:24px}
+.weather-line{background:linear-gradient(#072850a6,#031932e8);border:1px solid #83d8ff45;box-shadow:inset 0 1px #d7f8ff20,0 3px 6px #00214660;font-weight:550}
+.weather-line button,.gps-actions button,.clock-card .style-next,.speed-card .style-next{border:1px solid #69bcf075;box-shadow:inset 0 1px 2px #bcefff4d,inset 0 -2px 3px #001533aa,0 2px 4px #00112180;background:linear-gradient(#17548cd9,#0b2a50ef)}
+.speed-card .speed-dial{width:clamp(122px,14vw,226px);max-width:58%;border:0;box-shadow:inset 0 2px 3px #c4edff65,inset 0 -4px 5px #001126,0 5px 0 #04142a,0 10px 20px #0009,0 0 24px #00aeff45;background:radial-gradient(circle at 35% 20%,#295887,#06182f 63%,#0c3054 64%,#06142b 72%,#13528a 78%,#021224 88%)}
+.gauge-scale{position:absolute;inset:0;width:100%;height:100%;overflow:visible}.gauge-active{filter:drop-shadow(0 0 4px #00d9ff)}.gauge-needle{filter:drop-shadow(0 0 4px #fff)}
+.speed-card .speed-value strong{font-size:clamp(32px,4vw,62px);color:#fff;font-weight:650;text-shadow:0 2px 0 #7fb9de,0 4px 6px #000c,0 0 15px #498cdb88}
+.speed-card .speed-value span{font-size:11px;color:#d9f6ff;letter-spacing:0}.speed-card .speed-value{padding-top:8%;gap:3px}
+.speed-card .metrics{gap:12px;justify-content:space-around}.speed-card .trip-value strong{text-shadow:0 2px #4a7799,0 4px 8px #00112d;font-size:clamp(27px,3vw,46px)}.speed-card .trip-value span{color:#dbf7ff;font-weight:600;font-size:10px}
+.speed-card #gpsStatus{background:#03152b99;border-radius:9px;padding:5px 6px;color:#d3edff}.no-signal .gauge-scale{opacity:.55}
+.speed-card[data-gps=sport] .gauge-active{stroke:#ffb669;filter:drop-shadow(0 0 4px #ff8f4d)}.speed-card[data-gps=minimal] .gauge-scale{display:none}.speed-card[data-gps=minimal] .speed-dial{box-shadow:none;background:#02152780;border:1px solid #b2e5ff45}
+@container(max-width:285px){.weather-orb{width:84px}.clock-content #digitalClock{font-size:34px}#calendarDate{font-size:11px}.speed-card .trip-value strong{font-size:28px}.speed-card .trip-value span{font-size:9px}.clock-content{gap:8px}.speed-card .speed-value strong{font-size:34px}}
+@media(max-height:650px) and (orientation:landscape){.instruments{grid-template-rows:230px minmax(290px,1fr)}.speed-card{min-height:290px;padding:12px}.speed-card .metrics{flex:1 0 128px;min-height:128px}.clock-content{min-height:90px}.weather-orb{width:80px}.clock-content #digitalClock{font-size:32px}.speed-card .speed-dial{width:140px}.speed-card .speed-value strong{font-size:34px}.weather-line{padding:5px;font-size:12px}.weather-line button{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.clock-face{transform:none}}
+.clock-card[data-clock=aurora][data-weather=unknown] .clock-face{display:block}
+.clock-card[data-clock=aurora][data-weather=unknown] .weather-orb{display:none}
+@media(min-width:561px) and (min-height:440px) and (max-height:650px){
+ .instruments{grid-template-rows:minmax(168px,.43fr) minmax(232px,.57fr);gap:8px}
+ .clock-card{padding:8px}.clock-head{position:absolute;top:8px;left:10px;right:8px;height:28px;align-items:start}.clock-head>span{padding-top:4px;font-size:9px}.clock-head .style-next{margin-top:-4px}
+ .clock-content{padding:22px 0 0;min-height:78px;gap:8px}.clock-content #digitalClock{font-size:30px}.clock-face{width:68px}.weather-orb{width:66px}
+ .weather-line{padding:3px 5px;gap:4px}.weather-line span{font-size:11px}.weather-line button{padding:4px;font-size:11px}
+ .speed-card{padding:8px;min-height:232px}.speed-card .speed-top{font-size:9px}.speed-card .metrics{min-height:98px;flex:1 0 98px;padding:0;gap:8px}.speed-card .speed-dial{width:108px}.speed-card .speed-value strong{font-size:27px}.speed-card .trip-value strong{font-size:26px}.speed-card #gpsStatus{margin:2px 0;padding:2px 4px;font-size:10px;min-height:14px}.gps-actions{gap:4px}.speed-card .gps-actions button{min-height:44px;padding:4px;font-size:12px}
+}
+
+/* 2.12.0: a raised housing, recessed dial and curved glass are separate layers. */
+.clock-card,.speed-card{border-color:#68d2ff;box-shadow:inset 0 1px 1px #e9fdff,inset 2px 0 4px #3ac4ff70,inset -2px -3px 5px #000b,0 3px 0 #020a1c,0 7px 12px #0009,0 0 10px #159aff35}
+.clock-card:after,.speed-card:after{inset:2px;background:linear-gradient(130deg,#c7f3ff28,transparent 22%,transparent 74%,#298cff15);border:1px solid #97e5ff38;box-shadow:inset 0 2px 5px #a4eaff1a,inset 0 -4px 6px #0007}
+.speed-card .speed-dial{isolation:isolate;transform:perspective(650px) rotateX(9deg) rotateY(-9deg);background:radial-gradient(ellipse at 28% 16%,#2978a5,#092344 45%,#010b1e 73%);box-shadow:inset 2px 3px 3px #b3f8ff90,inset -4px -6px 5px #000e,3px 4px 0 #0c2a44,5px 7px 0 #061a2d,8px 14px 14px #000d,-6px -3px 20px #00c8ff65,0 0 5px #3ed5ff}
+.speed-card .speed-dial:before{content:'';position:absolute;inset:-4%;border-radius:50%;background:radial-gradient(ellipse,#00d9ff00 63%,#00b8ff48 70%,transparent 77%);z-index:-1;pointer-events:none}
+.speed-card .speed-dial:after{content:'';position:absolute;left:16%;top:12%;width:68%;height:38%;border-radius:50% 50% 48% 48%;background:linear-gradient(155deg,#d2f5ff28,#6dbfff05 75%);transform:rotate(-20deg);pointer-events:none;z-index:3}
+.gauge-scale{filter:drop-shadow(1px 2px 1px #0009)}.gauge-active{stroke:#adffff;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 7px #00d9ff)}.speed-card .speed-value{z-index:2}.speed-card .speed-value strong{color:#fff;text-shadow:0 1px #fff,0 2px #98c5ee,0 3px #366899,1px 5px 4px #000d,0 0 12px #4c9bff70}
+.speed-card .trip-value strong,.clock-content #digitalClock{text-shadow:0 1px #fff,0 2px #bddff7,0 3px #527fba,1px 5px 5px #001130e6,0 0 18px #88bcff55}
+.clock-face{box-shadow:inset 0 0 0 3px #091b35,inset 3px 6px 13px #000e,1px 2px 0 #b6dffb,3px 5px 0 #113557,6px 10px 0 #05172c,9px 16px 16px #000c,-3px -2px 14px #40caff88;transform:perspective(650px) rotateX(9deg) rotateY(-9deg)}
+.weather-orb{filter:drop-shadow(8px 14px 5px #01275299)}
+.orb-sun{background:radial-gradient(circle at 28% 22%,#fffff7 0%,#fffac4 17%,#ffdf61 42%,#ffb92d 66%,#ed8410 86%,#a44705 100%);box-shadow:inset 2px 3px 4px #fffde8,inset -5px -7px 10px #cb6f14aa,0 0 3px 2px #fff6ba,0 0 13px #fff3a4,0 0 32px #ffcb68a6}
+.orb-cloud{background:radial-gradient(ellipse at 36% 6%,#fff 10%,#eafaff 34%,#b0d8f3 61%,#659cc9 88%);box-shadow:inset 0 3px 4px #fff,inset 0 -5px 7px #407fbb80,3px 7px 6px #00356880}
+.orb-cloud:before,.orb-cloud:after{background:radial-gradient(circle at 30% 20%,#fff 20%,#dff3ff 55%,#7db5df 85%);box-shadow:inset -3px -3px 5px #5499c570}
+.weather-line,.speed-card #gpsStatus{box-shadow:inset 0 2px 5px #000b,0 1px 0 #5fd6ff80}
+.speed-card[data-gps=minimal] .speed-dial{transform:none;box-shadow:none}.speed-card[data-gps=minimal] .speed-dial:before,.speed-card[data-gps=minimal] .speed-dial:after{display:none}
+@media(prefers-reduced-motion:reduce){.speed-card .speed-dial,.clock-face{transform:none}}

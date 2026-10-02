@@ -1,0 +1,34 @@
+/* 2.26 additive layout and weather collection. Original CSS is untouched. */
+[data-led-color=rainbow]{--led-mix:linear-gradient(90deg,#ff8585,#ffe887,#9affbc,#8fdaff,#c2a0ff,#ff9dce)}
+[data-led-color=sunset]{--led-mix:linear-gradient(90deg,#ffe6a6,#ffa06f,#ff8cc8,#c5a1ff)}
+[data-led-color=aurora]{--led-mix:linear-gradient(90deg,#9effd3,#8ce9ff,#bba4ff,#ffa7e8)}
+[data-led-color=rainbow] .led-content,[data-led-color=sunset] .led-content,[data-led-color=aurora] .led-content{background:var(--led-mix);background-clip:text;-webkit-background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 0 3px #bce5ff55)}
+.pro-led-side h3{margin-top:0}
+@media(min-width:740px) and (orientation:landscape){
+ .pro-personalize{padding:12px}
+ .pro-personalize form{width:min(1320px,98vw);height:min(720px,calc(100dvh - 24px));display:grid;grid-template-columns:minmax(0,1.7fr) minmax(260px,1fr);grid-template-rows:auto auto minmax(0,1fr) auto auto;gap:12px 22px;overflow:hidden;padding:18px}
+ .pro-personalize header{grid-column:1/-1}.pro-led-preview{grid-column:1/-1;margin:0;min-height:64px;padding:10px 18px}
+ .pro-led-fields{grid-column:1;grid-row:3;overflow:auto;align-content:start;padding:3px 8px 3px 3px;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+ .pro-led-wide{grid-column:1/-1}.pro-led-side{grid-column:2;grid-row:3;overflow:auto;padding:6px 4px 6px 18px;border-left:1px solid #ffffff22}
+ .pro-led-side p{font-size:14px}.pro-personalize #proStatus{grid-column:1/-1;margin:0;min-height:20px}.pro-personalize footer{grid-column:1/-1;margin:0}.pro-personalize #proSave{flex:2}.pro-personalize #proCancel{flex:1}
+}
+body .split-shell .clock-card[data-clock=aurora] #digitalClock{font-size:clamp(36px,4vw,66px);line-height:1;font-weight:700}
+body .split-shell .clock-card #calendarDate{font-size:clamp(13px,1.15vw,19px);color:#fff;text-shadow:0 2px 4px #001329}
+body .split-shell .clock-card .weather-reading strong{font-size:clamp(30px,3vw,48px)}
+body .split-shell .clock-card .weather-reading span{font-size:clamp(13px,1.1vw,18px)}
+body .split-shell .clock-card .forecast-strip small,body .split-shell .clock-card .forecast-strip b{font-size:clamp(12px,1vw,17px)}
+body .split-shell .clock-card .weather-place{font-size:clamp(13px,1.15vw,19px)}
+body .split-shell .clock-card[data-clock-preset=sakura]{--scene-image:url('weather-sakura.png')}
+body .split-shell .clock-card[data-clock-preset=skytree]{--scene-image:url('weather-skytree.png')}
+body .split-shell .clock-card[data-clock-preset=disney]{--scene-image:url('weather-disney.png')}
+body .split-shell .clock-card:is([data-clock-preset=sakura],[data-clock-preset=skytree],[data-clock-preset=disney]):not(.has-photo)>.addon-weather-art{background-image:linear-gradient(#03152b22,#03152b22 45%,#03152b99),var(--scene-image);filter:none;background-size:cover;background-position:center}
+body .split-shell .clock-card[data-scene-motion=yes]:not(.has-photo)>.addon-weather-art{animation:velora-scenic-pan 24s ease-in-out infinite alternate;transform-origin:center}
+@keyframes velora-scenic-pan{from{transform:scale(1.03) translateX(-1%)}to{transform:scale(1.13) translateX(1%)}}
+.weather-collection{grid-column:1/-1;display:grid;gap:10px}.weather-collection label{display:flex;gap:10px;align-items:center}.weather-collection input{width:24px;height:24px}.weather-presets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.weather-presets button{min-height:90px;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:6px;background:#10283b;color:#fff;padding:12px;border-radius:14px;border:1px solid #ffffff40;text-shadow:0 2px 4px #000;background-size:cover;background-position:center}.weather-presets button[aria-pressed=true]{outline:3px solid #a6e9ff}
+@media(max-width:560px){.weather-presets{grid-template-columns:1fr}.pro-led-side{margin-top:20px}}
+@media(prefers-reduced-motion:reduce){body .split-shell .clock-card[data-scene-motion=yes]>.addon-weather-art{animation:none!important}}
+/* Color each glyph run instead of the scrolling track's empty lead-in. */
+[data-led-color=rainbow] .led-content>span,[data-led-color=sunset] .led-content>span,[data-led-color=aurora] .led-content>span{background:var(--led-mix);background-clip:text;-webkit-background-clip:text;color:transparent;text-shadow:none}
+body .split-shell .clock-card[data-clock=aurora] .clock-info{top:-5px;right:3%}
+body .split-shell .clock-card[data-clock=aurora] #calendarDate{font-size:clamp(12px,1vw,17px);margin-top:4px}
+@media(max-width:739px){.pro-personalize footer{position:sticky;bottom:-14px;background:#101e30;padding:10px 0}}
