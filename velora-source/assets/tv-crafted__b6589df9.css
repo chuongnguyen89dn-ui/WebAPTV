@@ -1,0 +1,21 @@
+/* Custom vector artwork drawn for VELORA, not an external icon pack. */
+body #youtubeTab:before{background-image:url('velora-crafted/youtube.svg')}
+body #tvTab:before{background-image:url('velora-crafted/tv.svg')}
+body #appsTab:before{background-image:url('velora-crafted/apps.svg')}
+body .drive-dock .map-link:before{background-image:url('velora-crafted/widgets.svg')}
+body #swapSideBtn:before{background-image:url('velora-crafted/swap.svg')}
+body #fitBtn:before{background-image:url('velora-crafted/fit.svg')}
+body .led-icon img{display:block;width:1.65em;height:1.65em;object-fit:contain;filter:drop-shadow(0 2px 3px #0008)}
+body #messagesBtn>svg{display:none}body #messagesBtn:before{content:'';width:32px;height:34px;background:url('velora-crafted/bell.svg') center/contain no-repeat}
+.tv-clean-controls{display:flex;align-items:center;gap:8px;flex:none;padding:6px 0;flex-wrap:wrap}
+.tv-clean-controls[hidden]{display:none!important}
+body .tv-clean-controls button{font-size:clamp(16px,1.5vw,23px);min-height:48px;padding:8px 14px}
+.tv-clean-controls label{display:flex;align-items:center;gap:8px;font-size:16px;color:#d5eaff}
+.tv-clean-controls input{width:clamp(90px,12vw,170px);min-height:44px;accent-color:#97dfff}
+.tv-clean-controls input:focus-visible{outline:3px solid #a5eaff;outline-offset:2px}
+.tv-clean-controls small{color:#add7e7;margin-left:auto}
+/* Remove native overlay controls only after custom controls are installed. */
+#tvVideo.velora-clean-player::-webkit-media-controls{display:none!important}
+#tvVideo.velora-clean-player::-webkit-media-controls-enclosure{display:none!important}
+.tv-panel.tv-expanded .tv-clean-controls{display:flex}
+@media(max-height:430px){.tv-clean-controls{padding:2px 0;gap:5px}.tv-clean-controls small{display:none}}
