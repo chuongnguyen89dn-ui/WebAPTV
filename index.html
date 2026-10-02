@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>WebAPTV CarPlay Split Test</title>
+<style>
+*{box-sizing:border-box}html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;background:#090b10;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}#app{display:flex;position:relative}.pane{height:100%;min-width:0;position:relative;overflow:hidden}.left{width:50%;background:linear-gradient(145deg,#101522,#05070b);display:flex;align-items:center;justify-content:center}.right{flex:1;background:#111}.demo{padding:24px;text-align:center}.demo h1{font-size:clamp(22px,4vw,46px);margin:0 0 12px}.demo p{opacity:.7}.divider{width:18px;margin-left:-9px;margin-right:-9px;z-index:20;cursor:ew-resize;touch-action:none;display:flex;align-items:center;justify-content:center}.divider:before{content:"";height:84px;width:6px;border-radius:6px;background:rgba(255,255,255,.9);box-shadow:0 0 0 5px rgba(0,0,0,.28)}iframe{border:0;width:100%;height:100%;display:block}.toolbar{position:absolute;z-index:30;top:max(10px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:7px;border-radius:14px;background:rgba(0,0,0,.58);backdrop-filter:blur(10px)}button{border:0;border-radius:10px;padding:10px 14px;background:#fff;color:#111;font-weight:700;font-size:14px}.status{position:absolute;left:12px;bottom:max(12px,env(safe-area-inset-bottom));z-index:30;padding:9px 12px;border-radius:10px;background:rgba(0,0,0,.65);font-size:12px}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="app">
+ <section id="left" class="pane left"><div class="demo"><h1>WebAPTV</h1><p>Pane thử nghiệm • kéo thanh giữa</p><button id="gps">Test GPS</button></div></section>
+ <div id="divider" class="divider" aria-label="Kéo để thay đổi tỷ lệ"></div>
+ <section id="right" class="pane right"><iframe id="map" title="Waze Live Map" allow="geolocation" src="https://embed.waze.com/iframe?zoom=12&lat=16.4637&lon=107.5909&ct=livemap"></iframe></section>
+ <div class="toolbar"><button data-size="35">35/65</button><button data-size="50">50/50</button><button data-size="65">65/35</button><button id="leftFull">Trái</button><button id="rightFull">Map</button></div>
+ <div id="status" class="status">Pointer: chờ • GPS: chưa thử</div>
+</div>
+<script>
+const app=document.getElementById('app'),left=document.getElementById('left'),right=document.getElementById('right'),divider=document.getElementById('divider'),status=document.getElementById('status');
+let dragging=false,lastPct=50;
+function setSplit(p){p=Math.max(15,Math.min(85,p));lastPct=p;left.style.width=p+'%';right.style.display='block';left.style.display='flex';divider.style.display='flex';status.textContent='Split: '+p.toFixed(0)+'% / '+(100-p).toFixed(0)+'% • GPS: '+(status.dataset.gps||'chưa thử')}
+function move(e){if(!dragging)return; e.preventDefault();const r=app.getBoundingClientRect();setSplit(((e.clientX-r.left)/r.width)*100)}
+divider.addEventListener('pointerdown',e=>{dragging=true;divider.setPointerCapture?.(e.pointerId);status.textContent='Pointer drag: OK'});divider.addEventListener('pointermove',move);divider.addEventListener('pointerup',()=>dragging=false);divider.addEventListener('pointercancel',()=>dragging=false);
+document.querySelectorAll('[data-size]').forEach(b=>b.onclick=()=>setSplit(+b.dataset.size));
+document.getElementById('leftFull').onclick=()=>{left.style.display='flex';left.style.width='100%';right.style.display='none';divider.style.display='none'};
+document.getElementById('rightFull').onclick=()=>{left.style.display='none';right.style.display='block';divider.style.display='none'};
+document.getElementById('gps').onclick=()=>{if(!navigator.geolocation){status.dataset.gps='API không có';status.textContent='GPS: API không có';return}status.textContent='GPS: đang yêu cầu…';navigator.geolocation.getCurrentPosition(p=>{const {latitude,longitude,accuracy}=p.coords;status.dataset.gps=`OK ${latitude.toFixed(5)}, ${longitude.toFixed(5)} ±${Math.round(accuracy)}m`;status.textContent='GPS: '+status.dataset.gps;document.getElementById('map').src=`https://embed.waze.com/iframe?zoom=15&lat=${latitude}&lon=${longitude}&ct=livemap`},e=>{status.dataset.gps='LỖI '+e.code+': '+e.message;status.textContent='GPS: '+status.dataset.gps},{enableHighAccuracy:true,timeout:12000,maximumAge:0})};
+setSplit(50);
+</script>
+</body>
+</html>
