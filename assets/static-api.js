@@ -8,6 +8,6 @@ if(a==='cameras')return json({ok:true,cameras:[]});return json({ok:false,error:'
 window.fetch=(input,init)=>{const raw=typeof input==='string'?input:(input&&input.url)||'';let u;try{u=new URL(raw,location.href)}catch(_){return nativeFetch(input,init)}
 if(/\/api\/tv\.php$/.test(u.pathname))return json({ok:true,channels:[]});
 if(/\/api\/map\.php$/.test(u.pathname))return mapApi(u,init);
-if(/\/api\/(meta|search)\.php$/.test(u.pathname)){if(u.pathname.endsWith('/meta.php')){const id=u.searchParams.get('id')||'';return json({ok:true,id,title:'YouTube video',channel:'YouTube',thumbnail:'https://i.ytimg.com/vi/'+encodeURIComponent(id)+'/hqdefault.jpg'});}return json({ok:true,items:[],warning:'Search requires the optional YouTube API backend.'});}
+if(/\/api\/(meta|search)\.php$/.test(u.pathname)){if(u.pathname.endsWith('/meta.php')){const id=u.searchParams.get('id')||'';return json({ok:true,id,title:'YouTube video',channel:'YouTube',thumbnail:'https://i.ytimg.com/vi/'+encodeURIComponent(id)+'/hqdefault.jpg'});}const q=u.searchParams.get('q')||'';const url='https://www.youtube.com/results?search_query='+encodeURIComponent(q);return json({ok:true,items:[{id:'yt-search',title:'Tìm “'+q+'” trên YouTube',url,web_url:url,external:true}],stale:true,warning:'Mở kết quả tìm kiếm trên YouTube.'});}
 return nativeFetch(input,init);};
 })();
