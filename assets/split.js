@@ -15,7 +15,7 @@
   function history(){try{const h=JSON.parse(localStorage.getItem('cartubeHistory')||'[]');return Array.isArray(h)?h.filter(x=>x&&/^[\w-]{11}$/.test(x.id)).slice(0,24):[];}catch(_){return [];}}
   function browse(){
     ++searchGeneration;playback.close();currentID=null;
-    $('videoPanel').classList.remove('playing');$('videoForm').hidden=false;$('browseTabs').hidden=false;$('playerStage').hidden=true;
+    $('videoPanel').classList.remove('playing');$('videoForm').hidden=false;$('playerStage').hidden=true;
     $('changeBtn').hidden=true;$('retryBtn').hidden=true;$('originalBtn').href='https://www.youtube.com/';
   }
   window.addEventListener('velora-media-switch',e=>{if(e.detail==='tv'){browse();$('videoPanel').classList.remove('expanded');}});
@@ -84,11 +84,7 @@
     }catch(e){if(token===searchGeneration){renderVideos(history());playback.message(e.message||'Không tải được video.',true);}}
   }
   $('videoForm').addEventListener('submit',event=>{event.preventDefault();search($('videoInput').value);});
-  document.querySelectorAll('[data-query]').forEach(b=>b.addEventListener('click',()=>search(b.dataset.query)));
-  function recent(){browse();renderVideos(history());playback.message(history().length?'Video đã mở gần đây':'Chưa có lịch sử. Chọn danh mục để khám phá.');}
-  $('recentBtn').addEventListener('click',recent);
-  $('changeBtn').addEventListener('click',recent);
-  if(history().length)recent();
+  $('changeBtn').addEventListener('click',browse);
   $('retryBtn').addEventListener('click',()=>{if(currentID)playback.open(currentID);});
   const panel=$('videoPanel');
   function fullLabel(){const full=panel.classList.contains('expanded');$('fullBtn').textContent=full?'↙ Chia đôi':'⛶ Phóng to';$('fullBtn').setAttribute('aria-label',full?'Trở về chia đôi':'Phóng video vừa vùng web');window.dispatchEvent(new Event('resize'));}
