@@ -20,29 +20,45 @@
   }
   window.addEventListener('velora-media-switch',e=>{if(e.detail==='tv'){browse();$('videoPanel').classList.remove('expanded');}});
   function renderVideos(items){
-    window.VeloraYouTubeResults=items;
-    window.dispatchEvent(new CustomEvent('velora-youtube-results',{detail:items}));
-    const results=$('searchResults');
-    results.replaceChildren();
     const normalized=(Array.isArray(items)?items:[]).map(item=>{
       const id=String(item?.id||item?.videoId||item?.video_id||'');
       return {...item,id};
     }).filter(item=>/^[A-Za-z0-9_-]{11}$/.test(item.id)||item.external);
+    window.VeloraYouTubeResults=normalized;
+    window.VeloraYouTubeVisible=12;
+    const results=$('searchResults');
+    results.replaceChildren();
     results.hidden=!normalized.length;
     $('emptyPlayer').hidden=!!normalized.length;
-    for(const item of normalized){
-      const b=document.createElement('button'),img=document.createElement('img'),label=document.createElement('span'),channel=document.createElement('small');
-      b.type='button';
-      if(item.external){
-        img.src='assets/icon-youtube-3d.svg';img.alt='';label.textContent=item.title||'Tìm trên YouTube';channel.textContent='Mở kết quả YouTube';
-        b.append(img,label,channel);b.addEventListener('click',()=>window.open(item.url||item.web_url,'_blank','noopener,noreferrer'));
-      }else{
-        img.src=item.thumbnail||('https://i.ytimg.com/vi/'+item.id+'/mqdefault.jpg');img.alt='';img.loading='lazy';
-        label.textContent=item.title||'YouTube';channel.textContent=item.channel||'YouTube';
-        b.append(img,label,channel);b.addEventListener('click',()=>openVideo(item.id,item));
+    const draw=()=>{
+      results.replaceChildren();
+      const visible=normalized.slice(0,window.VeloraYouTubeVisible);
+      for(const item of visible){
+        const b=document.createElement('button'),img=document.createElement('img'),label=document.createElement('span'),channel=document.createElement('small');
+        b.type='button';
+        if(item.external){
+          img.src='assets/icon-youtube-3d.svg';img.alt='';label.textContent=item.title||'Tìm trên YouTube';channel.textContent='Mở kết quả YouTube';
+          b.append(img,label,channel);b.addEventListener('click',()=>window.open(item.url||item.web_url,'_blank','noopener,noreferrer'));
+        }else{
+          img.src=item.thumbnail||('https://i.ytimg.com/vi/'+item.id+'/mqdefault.jpg');img.alt='';img.loading='lazy';
+          label.textContent=item.title||'YouTube';channel.textContent=item.channel||'YouTube';
+          b.append(img,label,channel);b.addEventListener('click',()=>openVideo(item.id,item));
+        }
+        results.append(b);
       }
-      results.append(b);
-    }
+      if(window.VeloraYouTubeVisible<normalized.length){
+        const more=document.createElement('button');
+        more.type='button';more.className='youtube-load-more';
+        more.textContent='Tải thêm '+Math.min(12,normalized.length-window.VeloraYouTubeVisible)+' video';
+        more.addEventListener('click',()=>{window.VeloraYouTubeVisible=Math.min(normalized.length,window.VeloraYouTubeVisible+12);draw();more.scrollIntoView({block:'nearest'});});
+        results.append(more);
+      }
+      const status=document.createElement('div');
+      status.className='youtube-results-count';
+      status.textContent=window.VeloraYouTubeVisible+' / '+normalized.length+' video';
+      results.append(status);
+    };
+    draw();
   }
   function openVideo(id,item={},options={}){
     window.dispatchEvent(new CustomEvent('velora-media-switch',{detail:'youtube'}));
