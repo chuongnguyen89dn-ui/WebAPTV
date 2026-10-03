@@ -1,0 +1,22 @@
+/* The artwork's neon ring shares the live dial's centre and scale. */
+.speed-card[data-gps=ring].gps-aligned{
+ background-color:#020d21;
+ background-image:url('gps-user-neon-v2121.png');
+ background-size:var(--gps-art-width) var(--gps-art-height);
+ background-position:var(--gps-art-x) var(--gps-art-y);
+ background-repeat:no-repeat;
+}
+.speed-card[data-gps=ring].gps-aligned{
+ position:relative;isolation:isolate;
+ background-image:linear-gradient(#020d21aa,#020d2177),url('gps-user-neon-v2121.png');
+ background-size:100% 100%,auto 400%;background-position:center,center bottom;
+}
+.gps-art-layer{display:none;pointer-events:none}
+.speed-card[data-gps=ring].gps-aligned>.gps-art-layer{
+ display:block;position:absolute;inset:0;z-index:0;border-radius:inherit;
+ background-image:url('gps-user-neon-v2121.png');
+ background-size:var(--gps-art-width) var(--gps-art-height);
+ background-position:var(--gps-art-x) var(--gps-art-y);background-repeat:no-repeat;
+ -webkit-mask-image:radial-gradient(ellipse calc(var(--gps-art-width)*.52) calc(var(--gps-art-width)*.65) at var(--gps-art-cx) var(--gps-art-cy),#000 72%,transparent 100%);
+ mask-image:radial-gradient(ellipse calc(var(--gps-art-width)*.52) calc(var(--gps-art-width)*.65) at var(--gps-art-cx) var(--gps-art-cy),#000 72%,transparent 100%);
+}
