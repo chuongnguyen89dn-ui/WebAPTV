@@ -16,3 +16,9 @@ body #videoForm button[type=submit]{font-size:20px;min-width:56px;touch-action:m
 .tecede-page .tecede-panel{grid-column:1;grid-row:1}body.tecede-page.widgets-left .tecede-panel{grid-column:2;grid-row:1}
 @media(max-width:560px) and (orientation:portrait){body.tecede-page .tecede-panel,body.tecede-page.widgets-left .tecede-panel{grid-column:auto;grid-row:auto;height:65dvh;min-height:440px}body.tecede-page .tecede-panel.tecede-expanded{height:100dvh;min-height:0}}
 .youtube-search-launch,.queue-youtube-link,.tecede-toolbar :is(a,button){font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+
+/* Keep live YouTube search cards visible on iPhone/Safari. */
+body #searchResults:not([hidden]){display:grid!important;visibility:visible!important;opacity:1!important;align-content:start!important;overflow-y:auto!important;min-height:180px!important}
+body #searchResults:not([hidden])>button{display:flex!important;visibility:visible!important;opacity:1!important;position:relative!important;height:auto!important;min-height:0!important;color:#f4f7fc!important;z-index:1!important}
+body #searchResults:not([hidden])>button img{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;height:auto!important;aspect-ratio:16/9!important;object-fit:cover!important}
+body #searchResults:not([hidden])>button span,body #searchResults:not([hidden])>button small{display:block!important;visibility:visible!important;opacity:1!important;color:inherit!important}
