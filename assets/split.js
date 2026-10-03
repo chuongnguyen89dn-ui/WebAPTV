@@ -24,9 +24,18 @@
     window.dispatchEvent(new CustomEvent('velora-youtube-results',{detail:items}));
     $('searchResults').replaceChildren();$('searchResults').hidden=!items.length;$('emptyPlayer').hidden=!!items.length;
     for(const item of items){
-      if(!/^[\w-]{11}$/.test(item.id))continue;
+      const external=!!item.external&&/^https?:\/\/www\\.youtube\\.com\//.test(item.url||item.web_url||'');
+      if(!/^[\\w-]{11}$/.test(item.id)&&!external)continue;
       const b=document.createElement('button'),img=document.createElement('img'),label=document.createElement('span'),channel=document.createElement('small');
-      b.type='button';img.src=`https://i.ytimg.com/vi/${item.id}/mqdefault.jpg`;img.alt='';img.loading='lazy';label.textContent=item.title||'YouTube';channel.textContent=item.channel||'YouTube';b.append(img,label,channel);b.addEventListener('click',()=>openVideo(item.id,item));$('searchResults').append(b);
+      b.type='button';
+      if(external){
+        img.src='assets/icon-youtube-3d.svg';img.alt='';label.textContent=item.title||'Tìm trên YouTube';channel.textContent='Mở kết quả YouTube';
+        b.append(img,label,channel);b.addEventListener('click',()=>window.open(item.url||item.web_url,'_blank','noopener,noreferrer'));
+      }else{
+        img.src='https://i.ytimg.com/vi/'+item.id+'/mqdefault.jpg';img.alt='';img.loading='lazy';label.textContent=item.title||'YouTube';channel.textContent=item.channel||'YouTube';
+        b.append(img,label,channel);b.addEventListener('click',()=>openVideo(item.id,item));
+      }
+      $('searchResults').append(b);
     }
   }
   function openVideo(id,item={},options={}){
