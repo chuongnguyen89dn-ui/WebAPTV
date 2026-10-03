@@ -79,7 +79,7 @@
     try{
       const data=await window.VeloraSearchRequest(raw);
       if(token!==searchGeneration)return;
-      const items=Array.isArray(data.items)?data.items.filter(x=>x&&/^[\w-]{11}$/.test(x.id)).slice(0,18):[];
+      const items=Array.isArray(data.items)?data.items.filter(x=>x&&/^[\w-]{11}$/.test(String(x.id||x.videoId||x.video_id||''))).map(x=>({...x,id:String(x.id||x.videoId||x.video_id)})):[];
       renderVideos(items);playback.message(data.warning||(items.length?`${items.length} video · Chạm để phát`:'Chưa tìm thấy video phù hợp.'));
     }catch(e){if(token===searchGeneration){renderVideos(history());playback.message(e.message||'Không tải được video.',true);}}
   }
