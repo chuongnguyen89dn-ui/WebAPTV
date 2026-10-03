@@ -22,20 +22,26 @@
   function renderVideos(items){
     window.VeloraYouTubeResults=items;
     window.dispatchEvent(new CustomEvent('velora-youtube-results',{detail:items}));
-    $('searchResults').replaceChildren();$('searchResults').hidden=!items.length;$('emptyPlayer').hidden=!!items.length;
-    for(const item of items){
-      const external=!!item.external&&/^https?:\/\/www\\.youtube\\.com\//.test(item.url||item.web_url||'');
-      if(!/^[\\w-]{11}$/.test(item.id)&&!external)continue;
+    const results=$('searchResults');
+    results.replaceChildren();
+    const normalized=(Array.isArray(items)?items:[]).map(item=>{
+      const id=String(item?.id||item?.videoId||item?.video_id||'');
+      return {...item,id};
+    }).filter(item=>/^[A-Za-z0-9_-]{11}$/.test(item.id)||item.external);
+    results.hidden=!normalized.length;
+    $('emptyPlayer').hidden=!!normalized.length;
+    for(const item of normalized){
       const b=document.createElement('button'),img=document.createElement('img'),label=document.createElement('span'),channel=document.createElement('small');
       b.type='button';
-      if(external){
+      if(item.external){
         img.src='assets/icon-youtube-3d.svg';img.alt='';label.textContent=item.title||'Tìm trên YouTube';channel.textContent='Mở kết quả YouTube';
         b.append(img,label,channel);b.addEventListener('click',()=>window.open(item.url||item.web_url,'_blank','noopener,noreferrer'));
       }else{
-        img.src='https://i.ytimg.com/vi/'+item.id+'/mqdefault.jpg';img.alt='';img.loading='lazy';label.textContent=item.title||'YouTube';channel.textContent=item.channel||'YouTube';
+        img.src=item.thumbnail||('https://i.ytimg.com/vi/'+item.id+'/mqdefault.jpg');img.alt='';img.loading='lazy';
+        label.textContent=item.title||'YouTube';channel.textContent=item.channel||'YouTube';
         b.append(img,label,channel);b.addEventListener('click',()=>openVideo(item.id,item));
       }
-      $('searchResults').append(b);
+      results.append(b);
     }
   }
   function openVideo(id,item={},options={}){
