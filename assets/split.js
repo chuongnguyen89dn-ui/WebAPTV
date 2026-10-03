@@ -19,46 +19,22 @@
     $('changeBtn').hidden=true;$('retryBtn').hidden=true;$('originalBtn').href='https://www.youtube.com/';
   }
   window.addEventListener('velora-media-switch',e=>{if(e.detail==='tv'){browse();$('videoPanel').classList.remove('expanded');}});
-  function renderVideos(items){
-    const normalized=(Array.isArray(items)?items:[]).map(item=>{
-      const id=String(item?.id||item?.videoId||item?.video_id||'');
-      return {...item,id};
-    }).filter(item=>/^[A-Za-z0-9_-]{11}$/.test(item.id)||item.external);
-    window.VeloraYouTubeResults=normalized;
-    window.VeloraYouTubeVisible=12;
-    const results=$('searchResults');
-    results.replaceChildren();
-    results.hidden=!normalized.length;
-    $('emptyPlayer').hidden=!!normalized.length;
-    const draw=()=>{
-      results.replaceChildren();
-      const visible=normalized.slice(0,window.VeloraYouTubeVisible);
-      for(const item of visible){
-        const b=document.createElement('button'),img=document.createElement('img'),label=document.createElement('span'),channel=document.createElement('small');
-        b.type='button';
-        if(item.external){
-          img.src='assets/icon-youtube-3d.svg';img.alt='';label.textContent=item.title||'Tìm trên YouTube';channel.textContent='Mở kết quả YouTube';
-          b.append(img,label,channel);b.addEventListener('click',()=>window.open(item.url||item.web_url,'_blank','noopener,noreferrer'));
-        }else{
-          img.src=item.thumbnail||('https://i.ytimg.com/vi/'+item.id+'/mqdefault.jpg');img.alt='';img.loading='lazy';
-          label.textContent=item.title||'YouTube';channel.textContent=item.channel||'YouTube';
-          b.append(img,label,channel);b.addEventListener('click',()=>openVideo(item.id,item));
-        }
-        results.append(b);
-      }
-      if(window.VeloraYouTubeVisible<normalized.length){
-        const more=document.createElement('button');
-        more.type='button';more.className='youtube-load-more';
-        more.textContent='Tải thêm '+Math.min(12,normalized.length-window.VeloraYouTubeVisible)+' video';
-        more.addEventListener('click',()=>{window.VeloraYouTubeVisible=Math.min(normalized.length,window.VeloraYouTubeVisible+12);draw();more.scrollIntoView({block:'nearest'});});
-        results.append(more);
-      }
-      const status=document.createElement('div');
-      status.className='youtube-results-count';
-      status.textContent=window.VeloraYouTubeVisible+' / '+normalized.length+' video';
-      results.append(status);
-    };
-    draw();
+  let youtubeSearchQuery='',youtubeNextPageToken='',youtubeSearchItems=[];
+  function renderVideos(items,append=false){
+    const normalized=(Array.isArray(items)?items:[]).map(item=>{const id=String(item?.id||item?.videoId||item?.video_id||'');return {...item,id};}).filter(item=>/^[A-Za-z0-9_-]{11}$/.test(item.id)||item.external);
+    youtubeSearchItems=append?youtubeSearchItems.concat(normalized):normalized;
+    window.VeloraYouTubeResults=youtubeSearchItems;
+    const results=$('searchResults');results.replaceChildren();results.hidden=!youtubeSearchItems.length;$('emptyPlayer').hidden=!!youtubeSearchItems.length;
+    youtubeSearchItems.forEach(item=>{
+      const b=document.createElement('button'),img=document.createElement('img'),label=document.createElement('span'),channel=document.createElement('small');b.type='button';
+      img.src=item.thumbnail||('https://i.ytimg.com/vi/'+item.id+'/hqdefault.jpg');img.alt='';img.loading='lazy';label.textContent=item.title||'YouTube';channel.textContent=item.channel||'YouTube';b.append(img,label,channel);b.addEventListener('click',()=>openVideo(item.id,item));results.append(b);
+    });
+    if(youtubeNextPageToken){
+      const more=document.createElement('button');more.type='button';more.className='youtube-load-more';more.textContent='Tải thêm 50 video';
+      more.addEventListener('click',async()=>{more.disabled=true;more.textContent='Đang tải…';try{const data=await window.VeloraSearchRequest(youtubeSearchQuery,youtubeNextPageToken);youtubeNextPageToken=data.nextPageToken||'';renderVideos(data.items,true);playback.message(youtubeSearchItems.length+' video · Chạm để phát');}catch(e){more.disabled=false;more.textContent='Tải thêm 50 video';playback.message(e.message||'Không tải được trang tiếp theo.',true);}});
+      results.append(more);
+    }
+    const status=document.createElement('div');status.className='youtube-results-count';status.textContent=youtubeSearchItems.length+' video'+(youtubeNextPageToken?' · còn trang tiếp theo':'');results.append(status);
   }
   function openVideo(id,item={},options={}){
     window.dispatchEvent(new CustomEvent('velora-media-switch',{detail:'youtube'}));
@@ -71,17 +47,9 @@
   async function search(raw){
     raw=raw.trim();if(!raw)return;
     const id=parseID(raw);if(id){openVideo(id);return;}
-    if(/https?:|youtube\.|youtu\.be/i.test(raw)){playback.message('Liên kết YouTube không hợp lệ.',true);return;}
-    browse();$('videoInput').value=raw;
-    if(!window.SPLIT_HAS_KEY){renderVideos(history());playback.message('Tìm kiếm chưa được bật. Bạn có thể chọn video gần đây hoặc mở YouTube gốc.',true);return;}
-    const token=++searchGeneration;playback.message('Đang tìm video…');
-    renderVideos([]);
-    try{
-      const data=await window.VeloraSearchRequest(raw);
-      if(token!==searchGeneration)return;
-      const items=Array.isArray(data.items)?data.items.filter(x=>x&&/^[\w-]{11}$/.test(String(x.id||x.videoId||x.video_id||''))).map(x=>({...x,id:String(x.id||x.videoId||x.video_id)})):[];
-      renderVideos(items);playback.message(data.warning||(items.length?`${items.length} video · Chạm để phát`:'Chưa tìm thấy video phù hợp.'));
-    }catch(e){if(token===searchGeneration){renderVideos(history());playback.message(e.message||'Không tải được video.',true);}}
+    if(/https?:|youtube\\.|youtu\\.be/i.test(raw)){playback.message('Liên kết YouTube không hợp lệ.',true);return;}
+    browse();$('videoInput').value=raw;const token=++searchGeneration;youtubeSearchQuery=raw;youtubeNextPageToken='';youtubeSearchItems=[];playback.message('Đang tìm video…');renderVideos([]);
+    try{const data=await window.VeloraSearchRequest(raw);if(token!==searchGeneration)return;youtubeNextPageToken=data.nextPageToken||'';renderVideos(data.items);playback.message(data.warning||(youtubeSearchItems.length?youtubeSearchItems.length+' video · Chạm để phát':'Chưa tìm thấy video phù hợp.'));}catch(e){if(token===searchGeneration){renderVideos([]);playback.message(e.message||'Không tải được video.',true);}}
   }
   $('videoForm').addEventListener('submit',event=>{event.preventDefault();search($('videoInput').value);});
   $('changeBtn').addEventListener('click',browse);
