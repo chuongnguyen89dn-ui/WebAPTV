@@ -3,50 +3,53 @@ const PORT=process.env.PORT||10000;
 const INSTANCES=['https://inv.nadeko.net','https://invidious.nerdvpn.de','https://yt.chocolatemoo53.com','https://invidious.tiekoetter.com','https://invidious.f5.si'];
 const json=(res,status,body)=>{res.writeHead(status,{'content-type':'application/json; charset=utf-8','access-control-allow-origin':'*','cache-control':'no-store'});res.end(JSON.stringify(body));};
 async function search(q){
-  const pipedInstances=[
-    'https://pipedapi.kavin.rocks',
-    'https://pipedapi.leptons.xyz',
-    'https://pipedapi.nosebs.ru',
-    'https://pipedapi.adminforge.de',
-    'https://api.piped.yt',
-    'https://pipedapi.drgns.space'
-  ];
-  for(const base of pipedInstances){
+  const seen=new Set();
+  const items=[];
+  const add=(x)=>{
+    const id=String(x?.videoId||x?.id||'');
+    if(!/^[A-Za-z0-9_-]{11}$/.test(id)||seen.has(id))return;
+    seen.add(id);
+    items.push({id,title:x.title||'YouTube',channel:x.author||x.uploaderName||'YouTube',thumbnail:x.thumbnail||((x.videoThumbnails||[]).find(t=>t.quality==='medium')?.url)||('https://i.ytimg.com/vi/'+id+'/mqdefault.jpg')});
+  };
+
+  // Invidious search explicitly supports page=N; collect several pages instead
+  // of assuming one response is the complete result set.
+  for(const base of INSTANCES){
     try{
-      let path='/search';
-      let nextpage='';
-      const all=[];
-      for(let page=1;page<=5&&all.length<100;page++){
-        const params=new URLSearchParams({q,filter:'videos'});
-        if(path.includes('nextpage')) params.set('nextpage',nextpage);
-        const r=await fetch(base+path+'?'+params.toString(),{headers:{accept:'application/json','user-agent':'Mozilla/5.0'},signal:AbortSignal.timeout(6000)});
-        if(!r.ok) break;
-        const data=await r.json();
-        const rows=Array.isArray(data?.items)?data.items:[];
-        for(const x of rows){
-          if(x?.type!=='stream') continue;
-          const m=String(x.url||'').match(/[?&]v=([A-Za-z0-9_-]{11})/);
-          const id=m?.[1]||String(x.videoId||'');
-          if(!/^[A-Za-z0-9_-]{11}$/.test(id)) continue;
-          all.push({id,title:x.title||'YouTube',channel:x.uploaderName||'YouTube',thumbnail:x.thumbnail||('https://i.ytimg.com/vi/'+id+'/mqdefault.jpg')});
-        }
-        nextpage=String(data?.nextpage||'');
-        if(!nextpage||!rows.length) break;
-        path='/nextpage/search';
+      items.length=0;seen.clear();
+      for(let page=1;page<=6;page++){
+        const url=base+'/api/v1/search?q='+encodeURIComponent(q)+'&type=video&region=VN&page='+page;
+        const r=await fetch(url,{headers:{accept:'application/json','user-agent':'Mozilla/5.0'},signal:AbortSignal.timeout(6000)});
+        if(!r.ok)break;
+        const rows=await r.json();
+        if(!Array.isArray(rows)||!rows.length)break;
+        for(const x of rows)if(x?.type==='video')add(x);
+        if(rows.length<10)break;
       }
-      const seen=new Set();
-      const items=all.filter(x=>!seen.has(x.id)&&(seen.add(x.id),true)).slice(0,100);
-      if(items.length)return {ok:true,items,source:base,pages:5};
+      if(items.length>0)return {ok:true,items:items.slice(0,100),source:base,pages:6};
     }catch{}
   }
 
-  for(const base of INSTANCES){
+  // Piped fallback, using its opaque nextpage token correctly.
+  for(const base of ['https://pipedapi.kavin.rocks','https://pipedapi.leptons.xyz','https://pipedapi.nosebs.ru','https://pipedapi.adminforge.de','https://api.piped.yt']){
     try{
-      const r=await fetch(base+'/api/v1/search?q='+encodeURIComponent(q)+'&type=video&region=VN',{headers:{accept:'application/json','user-agent':'Mozilla/5.0'},signal:AbortSignal.timeout(6000)});
-      if(!r.ok)continue;
-      const rows=await r.json();
-      const items=Array.isArray(rows)?rows.filter(x=>x&&x.type==='video'&&/^[A-Za-z0-9_-]{11}$/.test(x.videoId)).map(x=>({id:x.videoId,title:x.title||'YouTube',channel:x.author||'YouTube',thumbnail:(x.videoThumbnails||[]).find(t=>t.quality==='medium')?.url||'https://i.ytimg.com/vi/'+x.videoId+'/mqdefault.jpg'})):[]; 
-      if(items.length)return {ok:true,items,source:base};
+      items.length=0;seen.clear();
+      const first=await fetch(base+'/search?q='+encodeURIComponent(q)+'&filter=videos',{headers:{accept:'application/json'},signal:AbortSignal.timeout(6000)});
+      if(!first.ok)continue;
+      let data=await first.json();
+      for(const x of (Array.isArray(data?.items)?data.items:[])){
+        const m=String(x?.url||'').match(/[?&]v=([A-Za-z0-9_-]{11})/); add({...x,videoId:m?.[1]||x?.videoId,thumbnail:x?.thumbnail});
+      }
+      for(let page=1;page<6 && data?.nextpage;page++){
+        const np=encodeURIComponent(String(data.nextpage));
+        const r=await fetch(base+'/nextpage/search?nextpage='+np+'&q='+encodeURIComponent(q)+'&filter=videos',{headers:{accept:'application/json'},signal:AbortSignal.timeout(6000)});
+        if(!r.ok)break;
+        data=await r.json();
+        for(const x of (Array.isArray(data?.items)?data.items:[])){
+          const m=String(x?.url||'').match(/[?&]v=([A-Za-z0-9_-]{11})/); add({...x,videoId:m?.[1]||x?.videoId,thumbnail:x?.thumbnail});
+        }
+      }
+      if(items.length>0)return {ok:true,items:items.slice(0,100),source:base};
     }catch{}
   }
   return {ok:false,items:[],error:'No search provider available'};
