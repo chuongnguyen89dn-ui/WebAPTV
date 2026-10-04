@@ -19,16 +19,16 @@
     $('changeBtn').hidden=true;$('retryBtn').hidden=true;$('originalBtn').href='https://www.youtube.com/';
   }
   window.addEventListener('velora-media-switch',e=>{if(e.detail==='tv'){browse();$('videoPanel').classList.remove('expanded');}});
-  const youtubeBrowser=$('youtubeBrowser');
   function openYouTubeSearch(raw){
-    const q=String(raw||'').trim();
-    if(!q)return;
-    youtubeBrowser.src='https://www.youtube.com/results?search_query='+encodeURIComponent(q);
+    const q=String(raw||'').trim();if(!q)return;
+    const url='https://www.youtube.com/results?search_query='+encodeURIComponent(q);
+    window.open(url,'_blank');
   }
   function search(raw){
     const q=String(raw||'').trim();if(!q)return;
     $('videoInput').value=q;openYouTubeSearch(q);
   }
+  $('openYouTubeBtn')?.addEventListener('click',()=>window.open('https://www.youtube.com/','_blank'));
   $('videoForm').addEventListener('submit',event=>{event.preventDefault();search($('videoInput').value);});
   $('changeBtn').addEventListener('click',browse);
   $('retryBtn').addEventListener('click',()=>{if(currentID)playback.open(currentID);});
