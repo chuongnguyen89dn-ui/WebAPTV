@@ -1,37 +1,11 @@
-<!doctype html>
-<html lang="vi">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>WebAPTV Video + Map</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
-*{box-sizing:border-box}html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;background:#000}
-#app{display:flex}.left{width:50%;flex:none;background:#000;display:flex;align-items:center}
-.bar{width:12px;flex:none;background:#333;touch-action:none;z-index:1000}
-.right{flex:1;min-width:0;position:relative;background:#ddd}
-video{width:100%;height:100%;object-fit:contain;background:#000}
-#map{position:absolute;inset:0;width:100%;height:100%}
-.locate{position:absolute;right:12px;bottom:24px;z-index:1001;border:0;border-radius:10px;padding:12px 14px;font-size:16px}
-</style>
-</head>
-<body>
-<div id="app">
-<section class="left" id="left"><video controls autoplay playsinline webkit-playsinline src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"></video></section>
-<div class="bar" id="bar"></div>
-<section class="right"><div id="map"></div><button class="locate" id="locate">Vị trí của tôi</button></section>
-</div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-const map=L.map('map',{zoomControl:true}).setView([15.8801,108.3380],13);
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
-L.marker([15.8801,108.3380]).addTo(map).bindPopup('Bản đồ WebAPTV');
-document.getElementById('locate').onclick=()=>map.locate({setView:true,maxZoom:16,enableHighAccuracy:true});
-map.on('locationfound',e=>L.marker(e.latlng).addTo(map).bindPopup('Vị trí hiện tại').openPopup());
-const app=document.getElementById('app'),left=document.getElementById('left'),bar=document.getElementById('bar');
-function move(x){const r=app.getBoundingClientRect();left.style.width=Math.max(15,Math.min(85,(x-r.left)/r.width*100))+'%';setTimeout(()=>map.invalidateSize(),0)}
-bar.addEventListener('pointerdown',e=>{bar.setPointerCapture(e.pointerId);move(e.clientX)});
-bar.addEventListener('pointermove',e=>{if(bar.hasPointerCapture(e.pointerId))move(e.clientX)});
-setTimeout(()=>map.invalidateSize(),200);
-</script>
-</body></html>
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><title>WebAPTV Navigation</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><style>
+*{box-sizing:border-box}html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:-apple-system,sans-serif}#app{display:flex}.left{width:32%;flex:none;background:#000;display:flex;align-items:center}.bar{width:10px;flex:none;background:#333;touch-action:none;z-index:2000}.right{flex:1;min-width:0;position:relative;background:#ddd}video{width:100%;height:100%;object-fit:contain;background:#000}#map{position:absolute;inset:0}.search{position:absolute;z-index:1500;top:12px;left:55px;right:12px;display:flex;gap:6px}.search input{min-width:0;flex:1;border:0;border-radius:9px;padding:11px;font-size:16px;box-shadow:0 1px 5px #777}.search button,.locate{border:0;border-radius:9px;padding:10px 12px;font-size:15px;background:#fff}.locate{position:absolute;z-index:1500;right:12px;bottom:28px}.route{position:absolute;z-index:1500;left:12px;right:12px;bottom:12px;max-height:32%;overflow:auto;background:rgba(255,255,255,.94);border-radius:10px;padding:10px;display:none;font-size:14px}.route b{display:block;margin-bottom:5px}.route div{padding:4px 0;border-top:1px solid #ddd}</style></head><body><div id="app"><section class="left" id="left"><video controls autoplay playsinline webkit-playsinline src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"></video></section><div class="bar" id="bar"></div><section class="right"><div id="map"></div><div class="search"><input id="q" placeholder="Tìm điểm đến..."><button id="go">Tìm</button></div><button class="locate" id="locate">Vị trí</button><div class="route" id="route"></div></section></div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+const map=L.map('map').setView([15.8801,108.3380],13);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+let me=null,dest=null,routeLine=null;const routeBox=document.getElementById('route');
+function locate(){map.locate({setView:true,maxZoom:16,enableHighAccuracy:true})} document.getElementById('locate').onclick=locate;
+map.on('locationfound',e=>{me=e.latlng;L.circleMarker(me,{radius:8}).addTo(map).bindPopup('Vị trí hiện tại');if(dest)route()});
+async function search(){const q=document.getElementById('q').value.trim();if(!q)return;const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=5&q='+encodeURIComponent(q),{headers:{'Accept-Language':'vi'}});const a=await r.json();if(!a.length){alert('Không tìm thấy');return}const x=a[0];dest=L.latLng(+x.lat,+x.lon);L.marker(dest).addTo(map).bindPopup(x.display_name).openPopup();map.setView(dest,15);if(me)route();else locate()}
+document.getElementById('go').onclick=search;document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')search()});
+async function route(){const u='https://router.project-osrm.org/route/v1/driving/'+me.lng+','+me.lat+';'+dest.lng+','+dest.lat+'?overview=full&geometries=geojson&steps=true';const r=await fetch(u);const j=await r.json();if(!j.routes||!j.routes.length)return;const x=j.routes[0];if(routeLine)map.removeLayer(routeLine);routeLine=L.geoJSON(x.geometry).addTo(map);map.fitBounds(routeLine.getBounds(),{padding:[30,30]});routeBox.style.display='block';routeBox.innerHTML='<b>'+Math.round(x.distance/100)/10+' km · '+Math.round(x.duration/60)+' phút</b>'+x.legs[0].steps.map(s=>'<div>'+((s.maneuver&&s.maneuver.instruction)||s.name||'Tiếp tục')+' · '+Math.round(s.distance)+' m</div>').join('')}
+const app=document.getElementById('app'),left=document.getElementById('left'),bar=document.getElementById('bar');function move(x){const r=app.getBoundingClientRect();left.style.width=Math.max(15,Math.min(75,(x-r.left)/r.width*100))+'%';setTimeout(()=>map.invalidateSize(),0)}bar.addEventListener('pointerdown',e=>{bar.setPointerCapture(e.pointerId);move(e.clientX)});bar.addEventListener('pointermove',e=>{if(bar.hasPointerCapture(e.pointerId))move(e.clientX)});setTimeout(()=>map.invalidateSize(),200);
+</script></body></html>
