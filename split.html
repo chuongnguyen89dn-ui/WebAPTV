@@ -1,14 +1,15 @@
 <!doctype html>
 <html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>WebAPTV IPTV + Google Maps Web Test</title>
-<style>*{box-sizing:border-box}html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;background:#000}#app{display:flex}.left{width:34%;flex:none;background:#000;display:flex;align-items:center}.bar{width:10px;flex:none;background:#333;touch-action:none;z-index:5}.right{flex:1;min-width:0;background:#111;position:relative}video{width:100%;height:100%;object-fit:contain;background:#000}iframe{border:0;width:100%;height:100%;display:block}.tag{position:absolute;z-index:3;left:8px;bottom:8px;background:#000b;color:#fff;padding:5px 8px;border-radius:6px;font:12px -apple-system,sans-serif;pointer-events:none}</style>
+<title>WebAPTV Split IPTV + Google Maps</title>
+<style>*{box-sizing:border-box}html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;background:#000}#app{display:flex}.left{width:36%;flex:none;background:#000;display:flex;align-items:center;justify-content:center}.divider{width:10px;flex:none;background:#333;touch-action:none;z-index:5}.right{flex:1;min-width:0;background:#fff;overflow:hidden}video{width:100%;height:100%;object-fit:contain;background:#000}.right a{display:flex;width:100%;height:100%;align-items:center;justify-content:center;font:600 22px -apple-system,sans-serif;color:#1967d2;text-decoration:none;background:#fff}</style>
 </head><body><div id="app">
-<section class="left" id="left"><video id="tv" controls autoplay playsinline webkit-playsinline src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"></video></section>
-<div class="bar" id="bar"></div>
-<section class="right"><iframe id="gmap" src="https://www.google.com/maps" allow="geolocation"></iframe><div class="tag">Google Maps web gốc · coexistence test</div></section>
-</div><script>
-const app=document.getElementById('app'),left=document.getElementById('left'),bar=document.getElementById('bar');
+<section class="left" id="left"><video id="iptv" controls autoplay playsinline webkit-playsinline src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"></video></section>
+<div class="divider" id="divider"></div>
+<section class="right"><a href="https://www.google.com/maps/" target="_self">Google Maps</a></section>
+</div>
+<script>
+const app=document.getElementById('app'),left=document.getElementById('left'),d=document.getElementById('divider');
 function move(x){const r=app.getBoundingClientRect();left.style.width=Math.max(15,Math.min(75,(x-r.left)/r.width*100))+'%'}
-bar.addEventListener('pointerdown',e=>{bar.setPointerCapture(e.pointerId);move(e.clientX)});
-bar.addEventListener('pointermove',e=>{if(bar.hasPointerCapture(e.pointerId))move(e.clientX)});
+d.addEventListener('pointerdown',e=>{d.setPointerCapture(e.pointerId);move(e.clientX)});
+d.addEventListener('pointermove',e=>{if(d.hasPointerCapture(e.pointerId))move(e.clientX)});
 </script></body></html>
