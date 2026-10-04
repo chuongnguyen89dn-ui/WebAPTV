@@ -37,6 +37,30 @@
   $('fullBtn').addEventListener('click',()=>{panel.classList.toggle('expanded');fullLabel();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){panel.classList.remove('expanded');fullLabel();}});
   fullLabel();
+
+  // Original WebAPTV split-resizer behavior restored: pointer + touch drag.
+  const splitGrid=document.querySelector('.split-grid'),splitDivider=$('splitDivider');
+  let splitDragging=false;
+  function setSplitByX(x){
+    if(!splitGrid||!splitDivider||window.matchMedia('(max-width:560px) and (orientation:portrait)').matches)return;
+    const r=splitGrid.getBoundingClientRect(),gap=22,minLeft=115,minRight=180;
+    const px=Math.max(minLeft,Math.min(r.width-gap-minRight,x-r.left));
+    splitGrid.style.gridTemplateColumns=px+'px '+gap+'px minmax(0,1fr)';
+    try{localStorage.setItem('veloraSplitLeftPx',String(Math.round(px)));}catch(_){}
+  }
+  function restoreSplit(){
+    if(!splitGrid)return;
+    try{const px=Number(localStorage.getItem('veloraSplitLeftPx'));if(Number.isFinite(px)&&px>0){const r=splitGrid.getBoundingClientRect();if(r.width>0)setSplitByX(r.left+Math.min(px,r.width-202));}}catch(_){}
+  }
+  splitDivider?.addEventListener('pointerdown',e=>{splitDragging=true;e.preventDefault();splitDivider.setPointerCapture?.(e.pointerId);});
+  splitDivider?.addEventListener('pointermove',e=>{if(splitDragging){e.preventDefault();setSplitByX(e.clientX);}});
+  splitDivider?.addEventListener('pointerup',()=>{splitDragging=false;});
+  splitDivider?.addEventListener('pointercancel',()=>{splitDragging=false;});
+  splitDivider?.addEventListener('touchstart',e=>{splitDragging=true;e.preventDefault();},{passive:false});
+  splitDivider?.addEventListener('touchmove',e=>{if(splitDragging){e.preventDefault();setSplitByX(e.touches[0].clientX);}},{passive:false});
+  splitDivider?.addEventListener('touchend',()=>{splitDragging=false;});
+  window.addEventListener('resize',()=>{if(!splitDragging)restoreSplit()});
+  requestAnimationFrame(restoreSplit);
   const fits=[.8,.9,1];let fit=1;try{const v=Number(localStorage.getItem('cartubeFit'));if(fits.includes(v))fit=v;}catch(_){}
   function applyFit(){document.documentElement.style.setProperty('--ui-scale',fit);$('fitBtn').textContent=`Fit ${Math.round(fit*100)}%`;try{localStorage.setItem('cartubeFit',fit);}catch(_){}}
   $('fitBtn').addEventListener('click',()=>{fit=fits[(fits.indexOf(fit)+1)%fits.length];applyFit();});applyFit();
