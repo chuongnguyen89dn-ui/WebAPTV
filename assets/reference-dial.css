@@ -1,0 +1,14 @@
+.pro-hide-activation{display:none!important}
+.speed-card[data-gps=ring] .metrics{position:relative;flex-direction:column;justify-content:center;gap:0;padding:0 0 40px;min-height:190px;flex:1 0 190px}
+.speed-card[data-gps=ring] .speed-dial{width:clamp(160px,18vw,260px);max-width:92%;margin:0;transform:none!important}
+.speed-card[data-gps=ring] .trip-value{position:absolute;bottom:0;left:0;right:0;display:flex;flex-direction:row;justify-content:center;align-items:baseline;padding:0;gap:5px}
+.speed-card[data-gps=ring] .trip-value strong{font-size:27px}.speed-card[data-gps=ring] .trip-value>span{font-size:10px}
+.speed-card[data-gps=ring] #limitBadge{position:absolute;right:0;bottom:0;max-width:70px;background:#071827c9;transform:translateY(-44px);font-size:9px}
+.speed-card[data-gps=ring] .speed-value{width:37%;height:37%;transform:translateY(15%)}
+.speed-card[data-gps=ring] .speed-value strong{font-size:clamp(34px,4vw,64px)}
+.speed-card[data-gps=ring] .gauge-scale .live-needle{stroke-width:.6;filter:drop-shadow(1px 3px 1px #000b) drop-shadow(0 0 3px var(--speed-color))}
+.speed-card[data-gps=ring] .gauge-scale text{font-size:11px;fill:#f0f8ff}
+.weather-stale .weather-place:after{content:' · đã lưu';font-size:10px;color:#ffe0a8}
+@media(min-width:561px) and (min-height:440px) and (max-height:650px){.speed-card[data-gps=ring] .metrics{min-height:102px;flex-basis:102px;padding-bottom:22px}.speed-card[data-gps=ring] .speed-dial{width:130px;max-width:75%}.speed-card[data-gps=ring] .speed-value strong{font-size:30px}.speed-card[data-gps=ring] .trip-value strong{font-size:19px}.speed-card[data-gps=ring] #limitBadge{right:0;bottom:0;max-width:50px;transform:translateY(-24px);font-size:8px}.speed-card[data-gps=ring] .trip-value>span{font-size:8px}}
+@media(min-height:651px) and (orientation:landscape){.speed-card[data-gps=ring]{padding:12px;min-height:350px}.speed-card[data-gps=ring] .metrics{min-height:202px;flex:1 0 202px;padding-bottom:28px;justify-content:flex-start}.speed-card[data-gps=ring] .speed-dial{width:180px;flex-shrink:0}.speed-card[data-gps=ring] .gps-actions button{min-height:44px;height:44px;padding:4px 8px;font-size:13px}.speed-card[data-gps=ring] #gpsStatus{margin:4px 0;padding:3px;min-height:18px}}
+@media(min-height:651px) and (orientation:landscape){.instruments{grid-template-rows:minmax(228px,.75fr) minmax(410px,1.25fr)}.clock-card[data-clock=aurora]{padding:12px}.clock-card[data-clock=aurora] .clock-content{min-height:115px;margin-top:16px}.speed-card[data-gps=ring]{min-height:410px}.speed-card[data-gps=ring] .metrics{min-height:258px;flex-basis:258px}.speed-card[data-gps=ring] .speed-dial{width:230px;max-width:92%}}

@@ -1,0 +1,7 @@
+body .pro-personalize .pro-led-run-toggle{flex-direction:row;align-items:center;justify-content:space-between;gap:12px;min-height:50px;padding:10px 12px;border:1px solid #7894b766;border-radius:12px;background:#1e344d;align-self:end;cursor:pointer}
+body .pro-personalize #proLedEnabled{width:26px;height:26px;flex:none;margin:0;accent-color:#8fe2ee}
+body .led-window[data-effect=static] .led-content{animation:none;padding-left:0;max-width:100%}
+body .led-window[data-effect=static] .led-content>span:not(.led-icon){min-width:0;overflow:hidden;text-overflow:ellipsis}
+
+body[data-theme] .split-shell .velora-signature[hidden],body .pro-led-preview[hidden]{display:none!important}
+body[data-theme] .split-shell .media-brand:has(+.velora-signature[hidden]){margin-right:auto}

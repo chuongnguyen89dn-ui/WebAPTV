@@ -1,0 +1,27 @@
+/* The outside housing stays neutral, including previously saved pink themes. */
+body .split-shell,body[data-theme] .split-shell,.map-shell{border:1px solid #586572!important;border-style:solid!important;border-radius:17px;box-shadow:inset 0 1px 0 #b7c5d2,inset 0 2px 0 #07101b,inset 0 0 0 3px #151e28,inset 0 0 0 4px #3b798957,inset 0 -4px 7px #000b,0 3px 10px #0009;background:radial-gradient(ellipse at 0 0,#50829628,transparent 18%),radial-gradient(ellipse at 100% 100%,#447d9420,transparent 18%),linear-gradient(135deg,#131c27,#060b12 48%,#151f2a)!important}
+body .dashboard{border:1px solid #586572;box-shadow:inset 0 1px #bccedb,inset 0 0 0 3px #09131e,inset 0 0 0 4px #4eb7d133,0 10px 25px #0008}
+body .drive-dock{background:linear-gradient(#151e2899,#080d15d9);border-radius:10px}
+body .speed-card,body .clock-card{border:1px solid #4d7b92!important;box-shadow:inset 0 1px 2px #a2d7e745,inset 0 0 7px #2ec4ef18,0 2px 5px #0007}
+body .speed-card:after,body .clock-card:after{border:0;box-shadow:none;background:linear-gradient(125deg,#dbf5ff09,transparent 28%)}
+.speed-card .gps-actions button{background:linear-gradient(#7a97aa25,#16304488);border:1px solid #86adbf40;box-shadow:inset 0 1px #e2f8ff22,0 2px 4px #0005;backdrop-filter:blur(6px)}
+.speed-card .speed-dial{--speed-color:rgb(91,228,246);--speed-glow:.1;margin:4px;isolation:isolate;background:none!important;box-shadow:none!important;filter:none!important}
+.speed-card[data-gps=ring] .speed-dial:before{display:block;content:'';position:absolute;inset:0;border-radius:50%;background:url('gauge-cinema.png') center/100% 100% no-repeat;filter:grayscale(1) brightness(.72);z-index:-1;pointer-events:none}
+.speed-card .gauge-scale .live-rim{display:block!important;stroke:var(--speed-color);stroke-width:2;opacity:.7;filter:drop-shadow(0 0 3px var(--speed-color));transition:stroke .55s ease}
+.speed-card .gauge-scale .live-needle{display:block;fill:var(--speed-color);stroke:#e5fcff80;stroke-width:.5;transform-origin:120px 120px;filter:drop-shadow(2px 3px 1px #000b) drop-shadow(0 0 3px var(--speed-color));transition:transform .55s cubic-bezier(.22,.65,.3,1),fill .55s ease;pointer-events:none}
+.speed-card[data-gps=ring] .gauge-scale path.live-needle{display:block}
+.speed-card .gauge-scale .gauge-active{stroke:var(--speed-color)!important;filter:drop-shadow(0 0 4px var(--speed-color))!important;transition:stroke .55s ease}
+.speed-card .speed-value{width:48%;height:48%;border-radius:50%;padding:0!important;background:radial-gradient(circle at 30% 15%,#173251,#020e20 70%);border:1px solid #5b819b80;box-shadow:inset 0 1px 2px #a6dcff40,0 3px 6px #000b;z-index:2}
+.speed-card .speed-value strong{color:var(--speed-color)!important;text-shadow:0 1px 2px #000,0 0 6px var(--speed-color);transition:color .55s ease;font-size:clamp(28px,3.5vw,52px)}
+.speed-card .speed-value span{font-size:10px}.speed-card .gauge-scale .gauge-needle{display:none!important}
+.speed-card .no-signal .live-needle{display:none!important;transition:none}.speed-card .no-signal .live-rim{opacity:.18}
+.speed-card[data-gps=minimal] .speed-value{background:none;border:0;box-shadow:none}.speed-card[data-gps=minimal] .speed-dial:before{display:none}
+.speed-card .trip-value #limitBadge{margin-top:3px;min-height:44px;min-width:44px;padding:3px 6px;font-size:10px;line-height:1.3;border:1px solid #91c1d644;border-radius:8px;background:#0618299e;color:#d1e8f4;white-space:normal}
+.limit-settings{margin-top:20px;padding:16px;border-radius:14px;border:1px solid #65869b66;background:#071624}.limit-settings input{min-height:48px;width:100%;padding:10px;border:1px solid #7aa8b766;border-radius:10px;background:#102637;color:#fff;font:inherit}.limit-settings>div{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+body.speed-warning .split-shell,.map-shell:has(.hud.alert){box-shadow:inset 0 1px #acb9c6,inset 0 0 0 3px #171d26,inset 0 0 0 4px #ed6c7480,inset 0 0 14px #ea465327!important;animation:frame-alert 1.8s ease-in-out 2}
+@keyframes frame-alert{50%{border-color:#f78289;filter:drop-shadow(0 0 2px #b6414666)}}
+@media(max-height:650px) and (orientation:landscape){.speed-card .speed-value strong{font-size:29px}.speed-card .trip-value #limitBadge{font-size:9px;padding:2px 4px}.speed-card[data-gps=ring] .trip-value{padding-bottom:0}.speed-card[data-gps=ring] .metrics{gap:10px}}
+@media(prefers-reduced-motion:reduce){.speed-card .gauge-scale .live-needle,.speed-card .gauge-scale .live-rim,.speed-card .speed-value strong,.speed-card .gauge-scale .gauge-active{transition:none}body.speed-warning .split-shell,.map-shell:has(.hud.alert){animation:none}}
+.speed-card[data-gps=ring] .gauge-scale path.live-needle{display:block!important}
+.speed-card .gauge-scale .live-rim{opacity:calc(.25 + var(--speed-glow));stroke-width:calc(1px + 2px * var(--speed-glow))}
+.speed-card[data-speed-state=unknown] .live-needle{display:none!important}

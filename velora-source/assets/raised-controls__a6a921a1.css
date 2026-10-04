@@ -1,0 +1,33 @@
+/* Common raised surfaces; fixed touch targets are not enlarged by shadows. */
+body button,body .account-link,body .netflix-open,body .service,body .map-tools button,body #wazeGo{border:1px solid #648ba561;box-shadow:inset 0 1px 1px #e1f7ff88,inset 1px 0 1px #bddbff33,inset 0 -3px 3px #010811b3,0 3px 0 #030b15,0 5px 8px #0006;background-image:linear-gradient(160deg,#8fbddd2b,#ffffff05 43%,#00142670);text-shadow:0 1px 2px #0009;transition:box-shadow .12s ease,transform .12s ease;position:relative}
+body button:active,body .netflix-open:active,body .account-link:active{transform:translateY(2px);box-shadow:inset 0 2px 4px #0006,0 1px 0 #020914}
+body button:disabled{box-shadow:inset 0 1px #ffffff22;transform:none}
+.split-shell .drive-dock button,.split-shell .video-head button,.speed-card .gps-actions button,.clock-card .style-next,.speed-card .style-next,.weather-line button{background:linear-gradient(155deg,#375979cc,#142c47d9 45%,#0a1c31ed)!important;border:1px solid #90b7d15e;box-shadow:inset 0 1px 2px #cfedff80,inset 0 -3px 4px #0009,0 3px 0 #04101e,0 5px 8px #0007}
+.split-shell #gpsBtn{background:linear-gradient(150deg,#4c8992a6,#12444dd9 55%,#0c2836ef)!important}
+.forecast-strip{min-height:57px;gap:4px;padding:6px;margin-top:6px}
+.forecast-strip>div{grid-template-columns:25px minmax(0,1fr);gap:2px 4px;min-height:42px;padding-right:3px}
+.forecast-strip small{font-size:15px;font-weight:750;line-height:1.2;color:#fff;text-shadow:0 1px #60839c,0 3px 3px #001022}
+.forecast-strip b{font-size:14px;color:#f0fcff;text-shadow:0 2px 3px #001324}.forecast-icon{font-size:25px;filter:drop-shadow(0 2px 2px #0009)}
+.clock-card[data-clock=aurora].weather-ready .weather-line{bottom:79px}
+.clock-card .weather-motion{position:absolute;inset:0;z-index:0;overflow:hidden;border-radius:inherit;pointer-events:none;background:transparent}
+.weather-particle,.weather-cloud-drift,.weather-sun-rays,.weather-night-glow{display:none;position:absolute;pointer-events:none}
+.clock-card[data-weather=rain] .weather-motion,.clock-card[data-weather=fog] .weather-motion{background:linear-gradient(#081b42a6,#1236558c)}
+[data-weather=rain] .weather-particle{display:block;left:var(--x);top:-35%;height:24%;width:1px;background:linear-gradient(transparent,#e0f5ffba);box-shadow:0 0 2px #cceeff66;animation:weather-rain var(--duration) linear var(--delay) infinite}
+[data-weather=snow] .weather-motion{background:#31516b66}[data-weather=snow] .weather-particle{display:block;top:-15%;left:var(--x);height:4px;width:4px;border-radius:50%;background:#fff;box-shadow:0 0 4px #fff9;animation:weather-snow calc(var(--duration) * 5) linear var(--delay) infinite}
+[data-weather=cloud] .weather-cloud-drift,[data-weather=fog] .weather-cloud-drift,[data-weather=rain] .weather-cloud-drift{display:block;inset:-10% -25%;background:radial-gradient(ellipse at 25% 32%,#dde9f96e,transparent 35%),radial-gradient(ellipse at 70% 40%,#b9cce04d,transparent 40%);animation:weather-drift 16s ease-in-out infinite alternate}
+[data-weather=clear]:not([data-night=yes]) .weather-sun-rays{display:block;inset:-65%;background:conic-gradient(from 10deg at 34% 34%,transparent 0deg,#fff6bf29 13deg,transparent 26deg,transparent 45deg,#fff6bf1c 55deg,transparent 70deg,transparent 95deg,#fff6bf21 108deg,transparent 125deg,transparent 180deg,#fff6bf17 195deg,transparent 210deg);animation:weather-rays 25s ease-in-out infinite alternate}
+.clock-card[data-night=yes] .weather-motion{background:linear-gradient(#020b35aa,#06194766)}[data-night=yes] .weather-night-glow{display:block;inset:0;background:radial-gradient(ellipse at 25% 23%,#d7e4ff33,transparent 34%)}
+[data-night=yes] .orb-sun{background:radial-gradient(circle at 32% 22%,#fff,#d6e7ff 45%,#667cb2 90%);box-shadow:inset -6px -5px 8px #5a679c80,0 0 18px #c6ddff66}
+[data-weather=clear] .orb-sun{animation:weather-sun 6s ease-in-out infinite alternate}
+@keyframes weather-rain{to{transform:translate(-35px,520%)}}
+@keyframes weather-snow{to{transform:translate(28px,360px)}}
+@keyframes weather-drift{to{transform:translateX(13%)}}
+@keyframes weather-rays{to{transform:rotate(14deg);opacity:.5}}
+@keyframes weather-sun{to{transform:translateY(-2px);filter:brightness(1.08)}}
+/* Missing GPS must hide the needle immediately, above the decorative path rules. */
+.speed-card[data-gps=ring] .gauge-scale path.live-needle[style*="display: none"]{display:none!important}
+@media(min-width:561px) and (min-height:440px) and (max-height:650px){
+ .forecast-strip{min-height:45px;padding:3px;gap:3px}.forecast-strip>div{grid-template-columns:1fr;grid-template-rows:auto auto;gap:1px;min-height:35px;text-align:center}.forecast-strip small{font-size:13px;line-height:1.1}.forecast-strip b{font-size:12px}.forecast-icon{display:none}
+ .clock-card[data-clock=aurora] .clock-content{min-height:85px;margin-top:18px}.clock-card[data-clock=aurora].weather-ready .weather-line{bottom:54px}.weather-reading strong{font-size:23px}.weather-reading span{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){.weather-particle,.weather-cloud-drift,.weather-sun-rays,.orb-sun{animation:none!important}body button{transition:none}}

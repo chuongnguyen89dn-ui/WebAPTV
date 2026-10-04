@@ -1,0 +1,3 @@
+/* Keep the embedded page at native CSS pixels instead of resampling it. */
+.tecede-stage{overflow:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.tecede-stage #tecedeFrame{position:relative;display:block;left:auto;top:auto;transform:none!important;transform-origin:initial;max-width:none;max-height:none;filter:none;flex:none}

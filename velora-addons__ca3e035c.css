@@ -1,0 +1,38 @@
+/* Additions only. All original stylesheets remain unchanged. */
+/* The old masked island left dark margins as the controls reduced card height.
+   Render the full aligned artwork; live geometry follows the same ring. */
+body .split-shell .speed-card[data-gps=ring].gps-aligned>.gps-art-layer{mask-image:none;-webkit-mask-image:none;border-radius:inherit}
+body .split-shell .speed-card[data-gps=ring] .metrics{position:static!important}
+body .split-shell .speed-card[data-gps=ring] .speed-dial{position:absolute!important;left:50%;top:var(--addon-fill-y,20px);width:var(--addon-fill-dial,240px)!important;height:var(--addon-fill-dial,240px)!important;max-width:none!important;margin:0!important;transform:translateX(-50%)!important}
+body .split-shell .speed-card[data-gps=ring] .trip-value{bottom:76px!important;z-index:3}
+body .split-shell .speed-card[data-gps=ring] .speed-top,body .split-shell .speed-card[data-gps=ring] .gps-actions,body .split-shell .speed-card[data-gps=ring] #gpsStatus{position:relative;z-index:3}
+body .split-shell.with-media-nav{--addon-tap:clamp(60px,6vw,82px);--addon-font:clamp(20px,2.1vw,30px);grid-template-rows:var(--addon-tap) minmax(0,1fr) var(--addon-tap)!important}
+body[data-theme] .split-shell .media-nav>button:not(.velora-signature),body[data-theme] .split-shell .drive-dock :is(button,.map-link){min-height:52px!important;height:100%!important;font-size:var(--addon-font)!important;padding:6px 14px;gap:8px;white-space:nowrap}
+body[data-theme] .split-shell .drive-dock{align-items:stretch}
+body[data-theme] .split-shell #swapSideBtn{font-size:var(--addon-font)!important;gap:8px}
+body[data-theme] .split-shell .media-brand{margin-right:0}
+body[data-theme] .split-shell .velora-signature{display:flex;align-items:center;justify-content:center;gap:10px;flex:1;min-width:0;max-width:520px;height:auto;min-height:44px;margin:4px auto;padding:4px 12px;border-radius:30px;overflow:hidden;position:relative}
+.velora-signature:after{content:'';position:absolute;bottom:1px;left:12%;right:12%;height:2px;background:linear-gradient(90deg,transparent,#83e6ff,#b59aff,transparent);pointer-events:none}
+.velora-signature .signature-symbol{font-size:26px;color:#b3eaff}.signature-copy{min-width:0;text-align:left}.signature-copy strong{display:block;font-size:clamp(13px,1.25vw,20px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.signature-copy small{display:block;font-size:11px;color:#c4d3e5;margin-top:3px}.signature-pro{font-size:10px;padding:4px;border:1px solid #dac49a66;border-radius:6px;color:#ffe6b0}
+/* Reuse the original photo and 3D dial; tint decorative layers only. */
+.clock-card,.speed-card{--addon-finish:none;--addon-accent:#a1e4ff}
+[data-clock-preset=digital],[data-gps-preset=sport]{--addon-finish:hue-rotate(24deg) saturate(1.15);--addon-accent:#bac8ff}
+[data-clock-preset=classic],[data-gps-preset=minimal]{--addon-finish:hue-rotate(105deg) saturate(.82);--addon-accent:#ffc6ee}
+[data-clock-preset=jade],[data-gps-preset=jade]{--addon-finish:hue-rotate(310deg) saturate(.9);--addon-accent:#adf5dd}
+[data-clock-preset=silver],[data-gps-preset=silver]{--addon-finish:saturate(.16) brightness(1.13);--addon-accent:#e0edff}
+.addon-weather-art{display:none;pointer-events:none}
+body .clock-card[data-clock-preset]:not([data-clock-preset=aurora]):not(.has-photo){background:#092341!important}
+body .clock-card[data-clock-preset]:not([data-clock-preset=aurora]):not(.has-photo)>.addon-weather-art{display:block;position:absolute;inset:0;z-index:0;border-radius:inherit;background:linear-gradient(#00275516,#001b3f0a 60%,#00102555),url('weather-cinema.png') center/cover;filter:var(--addon-finish)}
+body .clock-card[data-clock-preset] .clock-content,body .clock-card[data-clock-preset] .forecast-strip{z-index:2}
+body .clock-card[data-clock-preset] .forecast-strip{position:relative}
+body .clock-card[data-clock-preset]:not([data-clock-preset=aurora]) #clockStyleLabel{display:block;font-size:10px;letter-spacing:.05em;color:var(--addon-accent)}
+body .clock-card[data-clock-preset]:not([data-clock-preset=aurora]) .weather-place{max-width:40%;font-size:12px}
+body .speed-card[data-gps-preset]:not([data-gps-preset=ring]).gps-aligned{background-image:linear-gradient(#020d21b0,#020d2190),url('gps-cinema.png');background-size:cover;background-position:center}
+body .speed-card[data-gps-preset]:not([data-gps-preset=ring])>.gps-art-layer{filter:var(--addon-finish)}
+body .speed-card[data-gps-preset]:not([data-gps-preset=ring]) .speed-dial{background:none;isolation:isolate}
+body .speed-card[data-gps-preset]:not([data-gps-preset=ring]) .speed-dial:before{content:'';display:block!important;position:absolute;inset:0;border:0;border-radius:50%;background:url('gauge-cinema.png') center/100% 100% no-repeat;filter:var(--addon-finish);z-index:-1;transform:none;box-shadow:none}
+body .speed-card[data-gps-preset]:not([data-gps-preset=ring]) .speed-top{color:var(--addon-accent)}
+body .speed-card[data-gps-preset]:not([data-gps-preset=ring]) .gauge-active{stroke:var(--addon-accent)}
+@media(max-width:1100px){.signature-copy small,.signature-pro{display:none}body[data-theme] .split-shell .velora-signature{padding:4px 8px;gap:6px}}
+@media(max-width:900px){body[data-theme] .split-shell .velora-signature{display:none}body[data-theme] .split-shell .media-brand{margin-right:auto}}
+@media(max-width:560px) and (orientation:portrait){body .split-shell.with-media-nav{height:auto!important;grid-template-rows:60px auto 60px!important}body .split-shell .split-grid{min-height:auto}body[data-theme] .split-shell .media-brand{display:none}body[data-theme] .split-shell .media-nav>button:not(.velora-signature){flex:1;min-width:0;padding:4px;font-size:20px!important}body[data-theme] .split-shell .drive-dock :is(button,.map-link){font-size:17px!important;min-width:44px;padding:4px 6px}body .split-shell #swapSideBtn:before,body .split-shell #fitBtn:before{display:none}}

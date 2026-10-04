@@ -1,0 +1,39 @@
+.clock-card[data-clock=aurora]{background-image:linear-gradient(#00275516,#001b3f0a 60%,#00102555),url('weather-cinema.png');background-size:cover;background-position:center;position:relative}
+.speed-card[data-gps=ring]{background-image:linear-gradient(#00102512,#00102510),url('gps-cinema.png');background-size:cover;background-position:center}
+.clock-card[data-clock=aurora] .clock-head{position:absolute;inset:10px 10px auto;z-index:5;height:32px;align-items:center;letter-spacing:0}
+.clock-card[data-clock=aurora] #clockStyleLabel{display:none}.weather-place{display:none;font-size:13px;color:#edfdff;text-shadow:0 1px 3px #002143}
+.clock-card[data-clock=aurora] .weather-place{display:block;max-width:75%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clock-card[data-clock=aurora] .clock-content{position:relative;display:block;min-height:155px;flex:1;padding:0;margin:20px 0 0}
+.clock-card[data-clock=aurora] .clock-info{position:absolute;right:5%;top:22%;text-align:left;max-width:54%}
+.clock-card[data-clock=aurora] #digitalClock{font-size:clamp(32px,3.3vw,54px);font-weight:650;text-shadow:0 2px 4px #084179}
+.clock-card[data-clock=aurora] #calendarDate{font-size:clamp(10px,1vw,15px);margin-top:4px}
+.clock-card[data-clock=aurora] .weather-orb{position:absolute;left:2%;top:8%;width:32%;max-width:120px}
+.clock-card[data-clock=aurora] .clock-face{position:absolute;left:3%;top:14%;width:30%;max-width:90px}
+.weather-reading{display:none;position:absolute;bottom:5%;left:3%;text-shadow:0 2px 4px #002357}
+.clock-card[data-clock=aurora] .weather-reading{display:flex;flex-direction:column}.weather-reading strong{font-size:clamp(23px,2.3vw,36px);font-weight:650;line-height:1.1}.weather-reading span{font-size:12px;margin-top:3px}
+.forecast-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;flex:none;margin:6px -5px -5px;padding:5px;background:linear-gradient(#073d75df,#021536f5);border:1px solid #46bdff80;border-radius:8px;box-shadow:inset 0 1px #9fedff45,0 3px 6px #0006}
+.forecast-strip[hidden]{display:none}.forecast-strip>div{display:grid;grid-template-columns:24px 1fr;grid-template-rows:1fr 1fr;gap:1px 3px;align-items:center;min-width:0;border-right:1px solid #51b9ff40;padding-right:3px}.forecast-strip>div:last-child{border:0}.forecast-strip small{font-size:10px;color:#b4f2ff}.forecast-strip b{font-size:10px;white-space:nowrap}.forecast-icon{grid-row:1/3;font-size:24px;color:#eaf9ff;filter:drop-shadow(0 2px 2px #001025);text-align:center}
+.clock-card[data-clock=aurora].weather-ready .weather-line{background:transparent;border:0;box-shadow:none;padding:0;min-height:0;position:absolute;right:10px;bottom:64px;z-index:4}
+.clock-card[data-clock=aurora].weather-ready .weather-line #weatherText{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.clock-card[data-clock=aurora].weather-ready .weather-line button{font-size:11px;min-height:44px;padding:3px 7px;background:#07366988}
+.clock-card:not([data-clock=aurora]) .forecast-strip{display:none}
+.speed-card[data-gps=ring] .speed-dial{transform:perspective(450px) rotateY(-19deg) rotateX(7deg);width:clamp(125px,15vw,240px);max-width:62%;background:radial-gradient(ellipse at 24% 18%,#11385f,#010e27 67%,#14518a 70%,#061631 84%);box-shadow:inset 2px 2px 3px #bcfaff80,8px 4px 0 #123451,13px 8px 0 #05172b,16px 14px 13px #000b,-8px -6px 22px #00cfff80}
+.speed-card[data-gps=ring] .metrics{justify-content:space-between;gap:16px}.speed-card[data-gps=ring] .trip-value{align-self:center;padding-bottom:18%;padding-right:3%;text-shadow:0 2px 6px #001429}.speed-card[data-gps=ring] .trip-value strong{font-size:clamp(26px,3vw,45px)}
+.clock-card,.speed-card{border-color:#43c9ff;box-shadow:inset 0 1px 3px #d4fbff9e,inset 0 0 7px #27acff88,0 2px 1px #020a19,0 0 5px #00a8ff80}
+@media(min-width:561px) and (min-height:440px) and (max-height:650px){
+ .instruments{grid-template-rows:minmax(185px,.445fr) minmax(228px,.555fr);gap:8px}.speed-card{min-height:228px}.speed-card .metrics{min-height:96px;flex-basis:96px}
+ .clock-card[data-clock=aurora]{padding:8px}.clock-card[data-clock=aurora] .clock-head{inset:5px 8px auto;height:30px}.weather-place{font-size:10px}
+ .clock-card[data-clock=aurora] .clock-content{margin-top:18px;min-height:100px}.clock-card[data-clock=aurora] .clock-info{top:18%;right:1%}.clock-card[data-clock=aurora] #digitalClock{font-size:30px}.clock-card[data-clock=aurora] #calendarDate{font-size:9px}
+ .weather-reading strong{font-size:23px}.weather-reading span{font-size:10px}.weather-reading{bottom:2%}.clock-card[data-clock=aurora] .weather-orb{top:1%;width:28%}.clock-card[data-clock=aurora].weather-ready .weather-line{right:7px;bottom:43px}.clock-card[data-clock=aurora].weather-ready .weather-line button{font-size:9px;padding:2px 4px;min-width:44px}
+ .forecast-strip{padding:3px;margin-top:3px;gap:2px}.forecast-strip>div{grid-template-columns:18px 1fr;gap:0 1px;padding-right:1px}.forecast-icon{font-size:18px}.forecast-strip small,.forecast-strip b{font-size:8px}
+ .speed-card[data-gps=ring] .speed-dial{width:118px}.speed-card[data-gps=ring] .trip-value strong{font-size:27px}
+}
+@media(prefers-reduced-motion:reduce){.speed-card[data-gps=ring] .speed-dial{transform:none}}
+.speed-card[data-gps=ring] .speed-dial{background:transparent url('gauge-cinema.png') center/100% 100% no-repeat;border:0;box-shadow:none;filter:drop-shadow(5px 9px 5px #000b);transform:perspective(450px) rotateY(-16deg) rotateX(5deg)}
+.speed-card[data-gps=ring] .speed-dial:before,.speed-card[data-gps=ring] .speed-dial:after{display:none}
+.speed-card[data-gps=ring] .gauge-scale circle,.speed-card[data-gps=ring] .gauge-scale line,.speed-card[data-gps=ring] .gauge-scale path:not(.gauge-active):not(.gauge-needle){display:none}
+.speed-card[data-gps=ring] .gauge-scale text{font-size:8px;fill:#b7eaff}
+.speed-card[data-gps=ring] .gauge-active{transform:translate(120px,120px) scale(.64) translate(-120px,-120px);stroke-width:2;filter:drop-shadow(0 0 3px #00eaff)}
+.speed-card[data-gps=ring] .gauge-needle{display:none}
+.speed-card[data-gps=ring] .no-signal{filter:drop-shadow(5px 9px 5px #000b) saturate(.55)}
+.speed-card[data-gps=ring] .speed-value{padding-top:0}

@@ -1,0 +1,28 @@
+/* 2.29: additions only; original stylesheets are preserved. */
+body .split-shell #fullBtn,body .split-shell #tvFull{display:inline-flex!important;visibility:visible!important;opacity:1!important;align-items:center;justify-content:center;flex:none;min-height:48px;min-width:120px;font-size:clamp(17px,1.7vw,24px)!important;white-space:nowrap;position:relative;z-index:5}
+body .video-head,body .tv-head{display:flex!important;flex:none!important;min-height:52px;gap:8px;align-items:center;justify-content:space-between}
+body .video-head>div{display:flex;flex-wrap:wrap;justify-content:flex-end}
+body .video-panel.expanded,body .tv-panel.tv-expanded,body .video-panel:fullscreen,body .tv-panel:fullscreen{position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;max-height:none!important;z-index:20000!important;border-radius:0!important;display:flex!important;flex-direction:column;overflow:hidden;padding:8px!important;background:#071222!important}
+body .video-panel.expanded .screen-area,body .video-panel:fullscreen .screen-area,body .tv-panel.tv-expanded .tv-screen,body .tv-panel:fullscreen .tv-screen{flex:1!important;min-height:0!important;width:100%!important}
+body .video-panel:fullscreen :is(#videoForm,#browseTabs,#searchResults,.feedback),body .tv-panel:fullscreen .tv-toolbar{display:none!important}
+body .video-panel.expanded iframe,body .video-panel:fullscreen iframe{width:100%!important;height:100%!important}
+body .instruments[data-workspace=one]{grid-template-rows:minmax(0,1fr)!important}
+body .instruments[data-workspace=none]{display:none!important}
+body .split-grid.workspace-wide{grid-template-columns:minmax(0,1fr)!important}
+body .instruments.workspace-right{grid-column:2!important;grid-row:1!important}
+body .split-grid:has(.workspace-right){grid-template-columns:minmax(0,1fr) clamp(300px,34vw,580px)!important}
+body .split-grid:has(.workspace-right)>:is(.video-panel,.tv-panel){grid-column:1!important;grid-row:1!important}
+body .workspace-hide{display:none!important}
+.workspace-settings{grid-column:1/-1;padding:14px;border:1px solid #7897ba55;border-radius:14px;background:#0b2033}
+.workspace-settings h3{margin:0 0 12px;font-size:21px}.workspace-settings label{display:flex;align-items:center;gap:12px;margin:10px 0;font-size:18px}.workspace-settings input[type=checkbox]{width:26px!important;height:26px;min-height:26px!important;flex:none;accent-color:#96dcff}
+.workspace-settings p{font-size:15px;line-height:1.5;color:#bfd5e7}.workspace-settings a{display:inline-flex;align-items:center;min-height:48px;color:#a4e7ff}
+.youtube-queue{min-height:0;display:flex;flex-direction:column;overflow:hidden;padding:12px;border:1px solid #7599bd;border-radius:16px;background:linear-gradient(145deg,#163354,#071325 70%);box-shadow:inset 0 1px #d9eeff55}
+.youtube-queue header{display:flex;align-items:center;gap:8px;justify-content:space-between;margin-bottom:8px;flex:none}.youtube-queue header strong{font-size:21px}
+body .youtube-queue button{min-height:48px;font-size:18px;padding:8px 12px}
+.queue-import{display:flex;gap:6px;flex:none}.queue-import input{width:100%;min-width:0;min-height:48px;font-size:18px;border-radius:10px;border:1px solid #6a8faa;background:#09192b;color:white;padding:8px}
+.queue-list{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:8px 0}
+body .queue-list button{display:flex;gap:10px;align-items:center;text-align:left;min-height:74px;flex:none;border-radius:12px;background:#142c45;color:#f2f8ff}
+.queue-list img{width:80px;height:45px;object-fit:cover;border-radius:7px;flex:none}.queue-list span{min-width:0}.queue-list strong{display:block;font-size:18px;line-height:1.3}.queue-list small{display:block;font-size:13px;color:#bfd3e7;margin-top:4px}.queue-list button[aria-current=true]{border-color:#9ae7ff;background:#245074;box-shadow:inset 3px 0 #a0efff}
+.queue-controls{display:flex;gap:6px;flex:none}.queue-controls button{flex:1}.queue-status{margin:5px 0;font-size:14px;color:#c3d9eb;flex:none;line-height:1.4}
+.queue-more[hidden]{display:none!important}.youtube-queue[hidden]{display:none!important}
+@media(max-width:560px) and (orientation:portrait){body .split-grid:has(.workspace-right){grid-template-columns:1fr!important}body .instruments.workspace-right{grid-column:1!important;grid-row:2!important}.youtube-queue{min-height:360px;max-height:600px}body .video-head strong{font-size:20px}body #fullBtn,body #tvFull{min-width:100px;font-size:17px!important}}

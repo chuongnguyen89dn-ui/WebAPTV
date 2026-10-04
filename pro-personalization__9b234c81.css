@@ -1,0 +1,18 @@
+/* New controls only; original stylesheets are unchanged. */
+body[data-theme] .split-shell .velora-signature{overflow:hidden;padding:4px 14px;--led-color:#a8e8ff;--led-duration:14s}
+.led-window{display:block;overflow:hidden;min-width:0;width:100%;text-align:center}
+.led-content{display:inline-flex;align-items:center;justify-content:center;gap:12px;white-space:nowrap;color:var(--led-color);font-size:clamp(18px,2vw,30px);font-weight:700;text-shadow:0 0 8px currentColor;letter-spacing:.03em}
+.led-icon{font-size:1.2em}.led-content [hidden]{display:none!important}
+.led-window[data-effect=scroll] .led-content{padding-left:100%;animation:velora-led-scroll var(--led-duration) linear infinite}
+.led-window[data-effect=glow] .led-content{animation:velora-led-glow 3s ease-in-out infinite alternate}
+@keyframes velora-led-scroll{to{transform:translateX(-100%)}}
+@keyframes velora-led-glow{from{opacity:.65;text-shadow:0 0 3px currentColor}to{opacity:1;text-shadow:0 0 12px currentColor}}
+.pro-personalize{position:fixed;inset:0;z-index:12000;display:grid;place-items:center;background:#020812d9;padding:16px;color:#f1f6ff;font:16px system-ui}
+.pro-personalize[hidden]{display:none}.pro-personalize form{width:min(740px,100%);max-height:100%;overflow:auto;padding:22px;border:1px solid #87a7c76b;border-radius:22px;background:#101e30;box-shadow:0 20px 80px #0008}
+.pro-personalize header{display:flex;align-items:center;justify-content:space-between;gap:12px}.pro-personalize h2{font-size:24px;margin:0}.pro-personalize h3{font-size:19px;margin:20px 0 8px}.pro-personalize p{color:#bdd0e6;line-height:1.5}
+.pro-personalize button,.pro-personalize select,.pro-personalize input[type=text]{min-height:48px;border:1px solid #7894b766;border-radius:12px;padding:10px 12px;font:inherit;color:#fff;background:#1e344d;width:100%}
+.pro-personalize header button{width:auto}.pro-personalize label{display:flex;flex-direction:column;gap:7px}.pro-led-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pro-led-wide{grid-column:1/-1}.pro-personalize input[type=checkbox]{width:24px;height:24px;flex:none}.pro-personalize .pro-resume-label{flex-direction:row;align-items:center}
+.pro-led-preview{--led-color:#a8e8ff;--led-duration:14s;background:#030d19;border-radius:18px;padding:18px;margin:16px 0;border:1px solid #8caad855;min-height:70px;display:flex;align-items:center}
+.pro-personalize footer{display:flex;gap:10px;margin-top:16px}.pro-personalize #proSave{background:#245a72}.pro-personalize :focus-visible{outline:3px solid #adeaff;outline-offset:3px}#proStatus{min-height:24px;margin:12px 0 0}#proSettingsOpen{min-height:48px;font-size:17px}
+@media(max-width:560px){.pro-personalize{padding:8px}.pro-personalize form{padding:14px}.pro-led-fields{grid-template-columns:1fr}.pro-personalize h2{font-size:20px}.pro-personalize footer{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){.led-window .led-content{animation:none!important;padding-left:0!important;white-space:normal;overflow-wrap:anywhere}}
