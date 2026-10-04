@@ -22,13 +22,13 @@
   function openYouTubeSearch(raw){
     const q=String(raw||'').trim();if(!q)return;
     const url='https://www.youtube.com/results?search_query='+encodeURIComponent(q);
-    window.open(url,'_blank');
+    window.location.assign(url);
   }
   function search(raw){
     const q=String(raw||'').trim();if(!q)return;
     $('videoInput').value=q;openYouTubeSearch(q);
   }
-  $('openYouTubeBtn')?.addEventListener('click',()=>window.open('https://www.youtube.com/','_blank'));
+  $('openYouTubeBtn')?.addEventListener('click',()=>window.location.assign('https://www.youtube.com/'));
   $('videoForm').addEventListener('submit',event=>{event.preventDefault();search($('videoInput').value);});
   $('changeBtn').addEventListener('click',browse);
   $('retryBtn').addEventListener('click',()=>{if(currentID)playback.open(currentID);});
