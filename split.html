@@ -1,12 +1,14 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><title>WebAPTV Hybrid Probe</title><style>*{box-sizing:border-box}html,body{margin:0;background:#080808;color:#fff;font-family:-apple-system,sans-serif}main{padding:16px}button,a{display:block;width:100%;margin:9px 0;padding:15px;border:0;border-radius:12px;background:#246fe5;color:#fff;font-size:16px;text-align:center;text-decoration:none}.yt{background:#d22}.maps{background:#16883d}.test{background:#6c4bd1}pre{white-space:pre-wrap;word-break:break-all;background:#151515;padding:12px;border-radius:10px;min-height:110px}</style></head><body><main><h2>WebAPTV · 3 hướng hybrid</h2><p>Test từng nút. Mục tiêu: dùng đường native của APTV thay vì iframe.</p>
-<a class="yt" href="aptv://play?name=YouTube&url=https%3A%2F%2Fwww.youtube.com%2F">1A. YouTube → aptv://play (URL web)</a>
-<a class="yt" href="aptv://play?name=YouTubeTest&url=https%3A%2F%2Ftest-streams.mux.dev%2Fx36xhzz%2Fx36xhzz.m3u8">1B. CONTROL → aptv://play (M3U8 thật)</a>
-<a class="maps" href="https://www.google.com/maps/">2A. Maps top-level (control)</a>
-<a class="yt" href="https://www.youtube.com/">2B. YouTube top-level (control)</a>
-<button class="test" onclick="probe()">3. Quét bridge native APTV</button>
-<button onclick="copyLog()">Sao chép kết quả</button>
-<pre id="log">Chưa chạy.</pre></main><script>
-const log=document.getElementById('log');
-function probe(){let o={href:location.href,ua:navigator.userAgent,webkit:!!window.webkit,handlers:[]};try{let h=window.webkit&&window.webkit.messageHandlers;if(h)o.handlers=Object.getOwnPropertyNames(h)}catch(e){o.error=String(e)};for(const n of ['aptvBrowser','aptvBrowserMediaNavigation','aptvBrowserBackgroundPlayback']){try{o[n]=!!(window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers[n])}catch(e){o[n]=false}}log.textContent=JSON.stringify(o,null,2)}
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><title>APTV Browser Native Probe</title><style>*{box-sizing:border-box}html,body{margin:0;background:#080808;color:#fff;font-family:-apple-system,sans-serif}main{padding:16px}button,a{display:block;width:100%;margin:9px 0;padding:15px;border:0;border-radius:12px;background:#246fe5;color:#fff;font-size:16px;text-align:center;text-decoration:none}.yt{background:#d22}.test{background:#6c4bd1}pre{white-space:pre-wrap;word-break:break-all;background:#151515;padding:12px;border-radius:10px;min-height:180px}</style></head><body><main><h2>APTV Browser → Native Video</h2><p>Không test IPTV. Test bridge video của Browser APTV.</p>
+<a class="yt" href="https://www.youtube.com/watch?v=jNQXAC9IVRw">1. Mở video YouTube thật trong Browser</a>
+<button class="test" onclick="scan()">2. Quét bridge + video hiện tại</button>
+<button class="test" onclick="send('ready')">3A. aptvBrowser: ready</button>
+<button class="test" onclick="send('videoCount')">3B. aptvBrowser: videoCount</button>
+<button class="test" onclick="send('youtubePlayback')">3C. aptvBrowser: youtubePlayback</button>
+<button onclick="copyLog()">Sao chép kết quả</button><pre id="log">Chưa chạy.</pre></main><script>
+const log=document.getElementById('log');let out=[];
+function add(x){out.push(typeof x==='string'?x:JSON.stringify(x));log.textContent=out.join('\n\n')}
+function handlers(){try{return Object.getOwnPropertyNames(window.webkit?.messageHandlers||{})}catch(e){return ['ERR '+e]}}
+function scan(){const vs=[...document.querySelectorAll('video')].map((v,i)=>({i,src:v.currentSrc||v.src||'',paused:v.paused,duration:v.duration,readyState:v.readyState}));add({href:location.href,webkit:!!window.webkit,handlers:handlers(),videos:vs})}
+function send(type){try{const h=window.webkit?.messageHandlers?.aptvBrowser;if(!h)return add({type,error:'aptvBrowser unavailable'});h.postMessage({type});add({type,sent:true})}catch(e){add({type,error:String(e)})}}
 async function copyLog(){try{await navigator.clipboard.writeText(log.textContent);alert('Đã sao chép')}catch(e){let t=document.createElement('textarea');t.value=log.textContent;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();alert('Đã sao chép')}}
 </script></body></html>
