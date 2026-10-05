@@ -11,8 +11,6 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: velora-1to1-port
 
       - name: Download APTV 9.5.12 base IPA
         run: |
