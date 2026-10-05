@@ -3,70 +3,59 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-  <title>Navigation Bubble Web Test</title>
+  <title>Navigation Split Web Test</title>
   <style>
-    :root{color-scheme:dark;--panel:rgba(13,18,28,.92);--line:rgba(255,255,255,.12);--text:#fff;--muted:#aeb8c8;--accent:#66a3ff;--ok:#5ee38d;--warn:#ffd166}
+    :root{color-scheme:dark;--panel:#0d121c;--line:rgba(255,255,255,.12);--text:#fff;--ok:#5ee38d;--warn:#ffd166}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05070a;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color:var(--text)}
+    html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;background:#05070a;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color:var(--text)}
     body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-    #stage{position:relative;width:100%;height:100%;min-height:100%;background:radial-gradient(circle at 50% 40%,#202735 0,#111722 34%,#06080d 72%);overflow:hidden}
-    .media-shell{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-    .media-card{width:min(72vw,980px);aspect-ratio:16/9;border:1px solid rgba(255,255,255,.08);border-radius:24px;background:linear-gradient(135deg,#191d25,#090b10);box-shadow:0 30px 80px #0008;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-    .media-card:before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 15%,rgba(255,255,255,.035) 40%,transparent 62%)}
-    .media-label{text-align:center;color:#cbd3df;letter-spacing:.02em}.media-label b{display:block;color:#fff;font-size:clamp(20px,3vw,42px);margin-bottom:8px}.media-label span{font-size:clamp(12px,1.3vw,17px);color:#7f8ca0}
-    #bubble{position:absolute;top:18px;left:18px;width:min(560px,calc(100vw - 36px));border-radius:24px;background:var(--panel);border:1px solid var(--line);box-shadow:0 18px 60px #000b;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);overflow:hidden;transition:.22s transform,.22s opacity}
-    .bubble-main{display:grid;grid-template-columns:116px 1fr;gap:14px;align-items:center;padding:18px}
-    .maneuver{height:102px;border-radius:19px;background:#182335;border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;justify-content:center}
-    #arrow{font-size:52px;line-height:1;font-weight:900}.distance{font-size:15px;color:#cfd9ea;margin-top:5px;font-variant-numeric:tabular-nums}
+    #app{display:flex;min-height:0}
+    .media{width:55%;flex:none;min-width:0;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .media-card{width:100%;height:100%;background:linear-gradient(135deg,#181c24,#080a0e);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
+    .media-label b{display:block;font-size:clamp(18px,3vw,38px);margin-bottom:8px}.media-label span{color:#7f8ca0;font-size:clamp(11px,1.4vw,16px)}
+    .divider{width:10px;flex:none;background:#343434;touch-action:none;cursor:col-resize;position:relative;z-index:5}
+    .divider:after{content:"";position:absolute;left:3px;top:42%;width:4px;height:16%;border-radius:4px;background:#6a6a6a}
+    .navside{flex:1;min-width:0;background:#070a10;display:flex;flex-direction:column;padding:14px;gap:12px;overflow:auto}
+    #bubble{width:100%;border-radius:22px;background:var(--panel);border:1px solid var(--line);overflow:hidden;box-shadow:0 18px 60px #0008}
+    .bubble-main{display:grid;grid-template-columns:110px minmax(0,1fr);gap:14px;align-items:center;padding:16px}
+    .maneuver{height:96px;border-radius:18px;background:#182335;border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;justify-content:center}
+    #arrow{font-size:50px;line-height:1;font-weight:900}.distance{font-size:15px;color:#cfd9ea;margin-top:5px;font-variant-numeric:tabular-nums}
     .copy{min-width:0}.eyebrow{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);margin-bottom:5px}.dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
-    #instruction{font-size:clamp(22px,3vw,35px);font-weight:800;line-height:1.08;margin:0 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    #road{font-size:clamp(15px,1.8vw,20px);color:#c4cedd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #instruction{font-size:clamp(20px,2.7vw,34px);font-weight:800;line-height:1.08;margin:0 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    #road{font-size:clamp(14px,1.6vw,19px);color:#c4cedd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .bubble-foot{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border-top:1px solid var(--line)}
-    .stat{background:#0f1520;padding:10px 14px;min-width:0}.stat small{display:block;color:#738197;font-size:11px;margin-bottom:2px}.stat strong{display:block;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
-    #nextLine{padding:10px 18px 13px;border-top:1px solid var(--line);color:#a9b5c6;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .controls{position:absolute;left:18px;right:18px;bottom:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px;border:1px solid var(--line);background:rgba(10,14,22,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:18px;box-shadow:0 14px 50px #0009}
-    button{appearance:none;border:1px solid rgba(255,255,255,.13);background:#171e2a;color:#fff;border-radius:13px;padding:11px 15px;font:700 14px/1 -apple-system,sans-serif;cursor:pointer}button:active{transform:scale(.97)}button.primary{background:#246cff;border-color:#4e88ff}.grow{flex:1}.gps{min-width:210px;color:#9facbf;font-size:12px;line-height:1.25}.gps b{color:#fff}.notice{position:absolute;top:18px;right:18px;max-width:360px;padding:10px 12px;border-radius:13px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);color:#9ca9bb;font-size:11px;line-height:1.35;text-align:right}
-    .rerouting .eyebrow{color:var(--warn)}.rerouting #bubble{transform:scale(.985)}
-    @media(max-width:760px){.notice{display:none}.bubble-main{grid-template-columns:88px 1fr;padding:13px}.maneuver{height:80px}.maneuver #arrow{font-size:40px}.controls{left:10px;right:10px;bottom:10px}.gps{order:10;width:100%;min-width:0}.media-card{width:92vw}.bubble-foot .stat{padding:8px 10px}.stat strong{font-size:14px}}
+    .stat{background:#0f1520;padding:10px 12px;min-width:0}.stat small{display:block;color:#738197;font-size:11px;margin-bottom:2px}.stat strong{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+    #nextLine{padding:10px 16px 13px;border-top:1px solid var(--line);color:#a9b5c6;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:11px;border:1px solid var(--line);background:#0a0e16;border-radius:17px}
+    button{appearance:none;border:1px solid rgba(255,255,255,.13);background:#171e2a;color:#fff;border-radius:12px;padding:10px 13px;font:700 13px/1 -apple-system,sans-serif;cursor:pointer}button:active{transform:scale(.97)}button.primary{background:#246cff;border-color:#4e88ff}.grow{flex:1}.gps{width:100%;color:#9facbf;font-size:12px;line-height:1.25}.gps b{color:#fff}
+    .notice{color:#727f91;font-size:11px;line-height:1.35;padding:0 4px 4px}.rerouting .eyebrow{color:var(--warn)}
+    @media(max-width:760px){.media{width:50%}.navside{padding:8px;gap:8px}.bubble-main{grid-template-columns:72px minmax(0,1fr);gap:8px;padding:9px}.maneuver{height:68px;border-radius:13px}#arrow{font-size:34px}.distance{font-size:11px}#instruction{font-size:16px}#road{font-size:11px}.eyebrow{font-size:9px}.stat{padding:7px 6px}.stat small{font-size:8px}.stat strong{font-size:11px}#nextLine{font-size:10px;padding:7px 8px}.controls{padding:8px;gap:6px}button{font-size:11px;padding:8px 9px}.notice{font-size:9px}.divider{width:8px}}
   </style>
 </head>
 <body>
-<main id="stage">
-  <div class="media-shell"><div class="media-card"><div class="media-label"><b>MEDIA / YOUTUBE AREA</b><span>Web test chỉ kiểm tra bong bóng dẫn đường + tiếng đồng bộ</span></div></div></div>
-
-  <section id="bubble" aria-live="polite">
-    <div class="bubble-main">
-      <div class="maneuver"><div id="arrow">↑</div><div class="distance" id="distance">1,4 km</div></div>
-      <div class="copy">
-        <div class="eyebrow"><span class="dot"></span><span id="statusText">Đang dẫn đường</span></div>
-        <div id="instruction">Tiếp tục đi thẳng</div>
-        <div id="road">Đường Võ Nguyên Giáp</div>
+<main id="app">
+  <section id="media" class="media"><div class="media-card"><div class="media-label"><b>MEDIA / YOUTUBE AREA</b><span>Giữ nguyên vùng media của split</span></div></div></section>
+  <div id="divider" class="divider" aria-label="Kéo để đổi tỉ lệ"></div>
+  <section class="navside">
+    <section id="bubble" aria-live="polite">
+      <div class="bubble-main">
+        <div class="maneuver"><div id="arrow">↑</div><div class="distance" id="distance">1,4 km</div></div>
+        <div class="copy"><div class="eyebrow"><span class="dot"></span><span id="statusText">Đang dẫn đường</span></div><div id="instruction">Tiếp tục đi thẳng</div><div id="road">Đường Võ Nguyên Giáp</div></div>
       </div>
-    </div>
-    <div class="bubble-foot">
-      <div class="stat"><small>Còn lại</small><strong id="remaining">5,8 km</strong></div>
-      <div class="stat"><small>Thời gian</small><strong id="eta">13 phút</strong></div>
-      <div class="stat"><small>Dự kiến đến</small><strong id="arrival">09:27</strong></div>
-    </div>
-    <div id="nextLine">Tiếp theo: rẽ phải sau 180 m</div>
+      <div class="bubble-foot"><div class="stat"><small>Còn lại</small><strong id="remaining">5,8 km</strong></div><div class="stat"><small>Thời gian</small><strong id="eta">13 phút</strong></div><div class="stat"><small>Dự kiến đến</small><strong id="arrival">09:27</strong></div></div>
+      <div id="nextLine">Tiếp theo: rẽ phải sau 180 m</div>
+    </section>
+    <div class="controls"><button id="prev">◀ Trước</button><button id="next" class="primary">Tiếp ▶</button><button id="reroute">Reroute</button><button id="speak">🔊 Hướng dẫn</button><button id="auto">▶ Tự chạy</button><button id="gpsBtn">GPS</button><div class="grow"></div><div class="gps" id="gpsText"><b>GPS:</b> chưa bật</div></div>
+    <div class="notice">WEB PROTOTYPE · Bong bóng nằm ở nửa dẫn đường của split, không đè lên vùng media.</div>
   </section>
-
-  <div class="notice">WEB PROTOTYPE · Không chạy Google Navigation SDK trong trình duyệt. Cùng một dữ liệu demo đang điều khiển cả hình và giọng nói để kiểm tra độ đồng bộ.</div>
-
-  <div class="controls">
-    <button id="prev">◀ Trước</button>
-    <button id="next" class="primary">Tiếp ▶</button>
-    <button id="reroute">Reroute</button>
-    <button id="speak">🔊 Phát hướng dẫn</button>
-    <button id="auto">▶ Tự chạy</button>
-    <button id="gpsBtn">GPS</button>
-    <div class="grow"></div>
-    <div class="gps" id="gpsText"><b>GPS:</b> chưa bật</div>
-  </div>
 </main>
 <script>
 (() => {
-  const steps = [
+  const app=document.getElementById('app'),media=document.getElementById('media'),divider=document.getElementById('divider');
+  function setSplit(x){const r=app.getBoundingClientRect();media.style.width=Math.max(25,Math.min(75,(x-r.left)/r.width*100))+'%';}
+  divider.onpointerdown=e=>{divider.setPointerCapture(e.pointerId);setSplit(e.clientX)};
+  divider.onpointermove=e=>{if(divider.hasPointerCapture(e.pointerId))setSplit(e.clientX)};
+  const steps=[
     {maneuver:'straight',arrow:'↑',distanceMeters:1400,instruction:'Tiếp tục đi thẳng',road:'Đường Võ Nguyên Giáp',remainingMeters:5800,etaMinutes:13,next:'Tiếp theo: rẽ phải sau 180 m',voice:'Tiếp tục đi thẳng trên đường Võ Nguyên Giáp.'},
     {maneuver:'right',arrow:'↱',distanceMeters:180,instruction:'Rẽ phải',road:'Đường Nguyễn Văn Linh',remainingMeters:4400,etaMinutes:10,next:'Sau đó đi thẳng 1,2 km',voice:'Sau 180 mét, rẽ phải vào đường Nguyễn Văn Linh.'},
     {maneuver:'straight',arrow:'↑',distanceMeters:1200,instruction:'Đi thẳng',road:'Đường Nguyễn Văn Linh',remainingMeters:3600,etaMinutes:8,next:'Tiếp theo: rẽ trái sau 350 m',voice:'Tiếp tục đi thẳng 1 phẩy 2 ki lô mét.'},
@@ -74,64 +63,15 @@
     {maneuver:'roundabout',arrow:'⟳',distanceMeters:600,instruction:'Ra lối thứ 2',road:'Vòng xuyến phía trước',remainingMeters:1500,etaMinutes:4,next:'Đi thẳng đến điểm đến',voice:'Tại vòng xuyến, đi ra ở lối thứ hai.'},
     {maneuver:'arrive',arrow:'●',distanceMeters:0,instruction:'Đã đến nơi',road:'Điểm đến ở bên phải',remainingMeters:0,etaMinutes:0,next:'Kết thúc dẫn đường',voice:'Bạn đã đến điểm đến. Điểm đến nằm ở bên phải.'}
   ];
-  let index=0, timer=null;
-  const $=id=>document.getElementById(id);
-  const fmtDistance=m=>m>=1000?(m/1000).toFixed(m%1000===0?0:1).replace('.',',')+' km':m+' m';
-  function render(data){
-    const d={...steps[index],...data};
-    $('arrow').textContent=d.arrow||'↑';
-    $('distance').textContent=fmtDistance(d.distanceMeters??0);
-    $('instruction').textContent=d.instruction||'';
-    $('road').textContent=d.road||'';
-    $('remaining').textContent=fmtDistance(d.remainingMeters??0);
-    $('eta').textContent=(d.etaMinutes??0)+' phút';
-    const t=new Date(Date.now()+(d.etaMinutes||0)*60000);
-    $('arrival').textContent=t.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
-    $('nextLine').textContent=d.next||'';
-    $('statusText').textContent=d.statusText||'Đang dẫn đường';
-    window.__currentNav=d;
-  }
-  function say(){
-    const d=window.__currentNav||steps[index];
-    if(!('speechSynthesis' in window)) return alert('Trình duyệt này không hỗ trợ speechSynthesis');
-    speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(d.voice||`${d.instruction}. ${d.road}.`);
-    u.lang='vi-VN'; u.rate=.95; speechSynthesis.speak(u);
-  }
+  let index=0,timer=null;const $=id=>document.getElementById(id);const fmtDistance=m=>m>=1000?(m/1000).toFixed(m%1000===0?0:1).replace('.',',')+' km':m+' m';
+  function render(data){const d={...steps[index],...data};$('arrow').textContent=d.arrow||'↑';$('distance').textContent=fmtDistance(d.distanceMeters??0);$('instruction').textContent=d.instruction||'';$('road').textContent=d.road||'';$('remaining').textContent=fmtDistance(d.remainingMeters??0);$('eta').textContent=(d.etaMinutes??0)+' phút';const t=new Date(Date.now()+(d.etaMinutes||0)*60000);$('arrival').textContent=t.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});$('nextLine').textContent=d.next||'';$('statusText').textContent=d.statusText||'Đang dẫn đường';window.__currentNav=d;}
+  function say(){const d=window.__currentNav||steps[index];if(!('speechSynthesis'in window))return alert('Trình duyệt này không hỗ trợ speechSynthesis');speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(d.voice||`${d.instruction}. ${d.road}.`);u.lang='vi-VN';u.rate=.95;speechSynthesis.speak(u);}
   function move(delta){index=(index+delta+steps.length)%steps.length;render();say();}
-  $('prev').onclick=()=>move(-1);
-  $('next').onclick=()=>move(1);
-  $('speak').onclick=say;
-  $('reroute').onclick=()=>{
-    document.body.classList.add('rerouting');
-    $('statusText').textContent='Đang tìm tuyến mới…';
-    setTimeout(()=>{document.body.classList.remove('rerouting');index=1;render({statusText:'Đã cập nhật tuyến',instruction:'Rẽ phải',road:'Tuyến mới · Nguyễn Văn Linh',distanceMeters:120,remainingMeters:3900,etaMinutes:9,next:'Sau đó đi thẳng 1,2 km',voice:'Đã tìm thấy tuyến mới. Sau 120 mét, rẽ phải vào đường Nguyễn Văn Linh.'});say();},900);
-  };
-  $('auto').onclick=()=>{
-    if(timer){clearInterval(timer);timer=null;$('auto').textContent='▶ Tự chạy';return;}
-    $('auto').textContent='⏸ Dừng';say();timer=setInterval(()=>move(1),5500);
-  };
-  $('gpsBtn').onclick=()=>{
-    if(!navigator.geolocation)return $('gpsText').innerHTML='<b>GPS:</b> trình duyệt không hỗ trợ';
-    $('gpsText').innerHTML='<b>GPS:</b> đang lấy vị trí…';
-    navigator.geolocation.getCurrentPosition(p=>{
-      $('gpsText').innerHTML=`<b>GPS:</b> ${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)} · ±${Math.round(p.coords.accuracy)} m`;
-    },e=>{$('gpsText').innerHTML='<b>GPS:</b> '+e.message;},{enableHighAccuracy:true,timeout:12000,maximumAge:2000});
-  };
-
-  // Bridge prototype: native iOS can later call window.navDemo.update({...})
-  window.navDemo={
-    update(info={}){
-      const map={left:'↰',right:'↱',straight:'↑',uTurn:'↶',roundabout:'⟳',arrive:'●'};
-      const normalized={...info};
-      if(info.maneuver && !info.arrow) normalized.arrow=map[info.maneuver]||'↑';
-      if(info.distanceMeters==null && info.distance!=null) normalized.distanceMeters=info.distance;
-      render(normalized);
-    },
-    speak:say,
-    next:()=>move(1),
-    previous:()=>move(-1)
-  };
+  $('prev').onclick=()=>move(-1);$('next').onclick=()=>move(1);$('speak').onclick=say;
+  $('reroute').onclick=()=>{document.body.classList.add('rerouting');$('statusText').textContent='Đang tìm tuyến mới…';setTimeout(()=>{document.body.classList.remove('rerouting');index=1;render({statusText:'Đã cập nhật tuyến',instruction:'Rẽ phải',road:'Tuyến mới · Nguyễn Văn Linh',distanceMeters:120,remainingMeters:3900,etaMinutes:9,next:'Sau đó đi thẳng 1,2 km',voice:'Đã tìm thấy tuyến mới. Sau 120 mét, rẽ phải vào đường Nguyễn Văn Linh.'});say();},900);};
+  $('auto').onclick=()=>{if(timer){clearInterval(timer);timer=null;$('auto').textContent='▶ Tự chạy';return;}$('auto').textContent='⏸ Dừng';say();timer=setInterval(()=>move(1),5500);};
+  $('gpsBtn').onclick=()=>{if(!navigator.geolocation)return $('gpsText').innerHTML='<b>GPS:</b> trình duyệt không hỗ trợ';$('gpsText').innerHTML='<b>GPS:</b> đang lấy vị trí…';navigator.geolocation.getCurrentPosition(p=>{$('gpsText').innerHTML=`<b>GPS:</b> ${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)} · ±${Math.round(p.coords.accuracy)} m`;},e=>{$('gpsText').innerHTML='<b>GPS:</b> '+e.message;},{enableHighAccuracy:true,timeout:12000,maximumAge:2000});};
+  window.navDemo={update(info={}){const map={left:'↰',right:'↱',straight:'↑',uTurn:'↶',roundabout:'⟳',arrive:'●'};const normalized={...info};if(info.maneuver&&!info.arrow)normalized.arrow=map[info.maneuver]||'↑';if(info.distanceMeters==null&&info.distance!=null)normalized.distanceMeters=info.distance;render(normalized);},speak:say,next:()=>move(1),previous:()=>move(-1)};
   render();
 })();
 </script>
