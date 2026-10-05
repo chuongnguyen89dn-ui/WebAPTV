@@ -24,7 +24,8 @@ jobs:
           git clone --depth 1 https://github.com/Tyilo/insert_dylib.git
           cd insert_dylib
           xcodebuild -project insert_dylib.xcodeproj -scheme insert_dylib -configuration Release CODE_SIGNING_ALLOWED=NO
-          cp build/Release/insert_dylib ../insert_dylib_bin
+          cp "$(find "$HOME/Library/Developer/Xcode/DerivedData" -type f -path "*/Build/Products/Release/insert_dylib" -print -quit)" ../insert_dylib_bin
+          test -x ../insert_dylib_bin
 
       - name: Unpack IPA
         run: |
