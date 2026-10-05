@@ -1,0 +1,66 @@
+name: Build APTV Native Split IPA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download APTV 9.5.12 base IPA
+        run: |
+          curl -fL --retry 3 -o base.ipa "https://github.com/chuongnguyen89dn-ui/WebAPTV/releases/download/aptv-base-9.5.12/com.kimen.aptvpro_9.5.12_decrypted.ipa"
+          echo "6823e0a2f8c006d4036d6cd1f254f8d0cb4700944815d43b9b509a6f446750c5  base.ipa" | shasum -a 256 -c -
+
+      - name: Install insert_dylib
+        run: |
+          git clone --depth 1 https://github.com/Tyilo/insert_dylib.git
+          cd insert_dylib
+          xcodebuild -project insert_dylib.xcodeproj -scheme insert_dylib -configuration Release CODE_SIGNING_ALLOWED=NO
+          cp build/Release/insert_dylib ../insert_dylib_bin
+
+      - name: Unpack IPA
+        run: |
+          rm -rf work
+          mkdir work
+          cd work
+          unzip -q ../base.ipa
+          APP="$(find Payload -maxdepth 1 -name '*.app' -print -quit)"
+          test -n "$APP"
+          echo "APP=$APP" >> "$GITHUB_ENV"
+
+      - name: Build native split hook
+        run: |
+          SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
+          xcrun --sdk iphoneos clang -arch arm64 -dynamiclib -fobjc-arc \
+            -miphoneos-version-min=15.0 -isysroot "$SDK" \
+            -framework UIKit -framework WebKit \
+            NativeSplit/APTVSplit.m \
+            -install_name @executable_path/Frameworks/APTVSplit.dylib \
+            -o APTVSplit.dylib
+          mkdir -p "work/$APP/Frameworks"
+          cp APTVSplit.dylib "work/$APP/Frameworks/APTVSplit.dylib"
+
+      - name: Inject dylib
+        run: |
+          EXEC=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "work/$APP/Info.plist")
+          chmod +x insert_dylib_bin
+          ./insert_dylib_bin --all-yes "@executable_path/Frameworks/APTVSplit.dylib" "work/$APP/$EXEC"
+
+      - name: Ad-hoc sign and package
+        run: |
+          codesign --force --sign - "work/$APP/Frameworks/APTVSplit.dylib"
+          codesign --force --deep --sign - "work/$APP"
+          cd work
+          zip -qry ../APTV-9.5.12-NativeSplit-unsigned.ipa Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: APTV-9.5.12-NativeSplit-IPA
+          path: APTV-9.5.12-NativeSplit-unsigned.ipa
+          if-no-files-found: error
