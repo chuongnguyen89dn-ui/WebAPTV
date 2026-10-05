@@ -27,8 +27,8 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/Tyilo/insert_dylib.git
           cd insert_dylib
-          xcodebuild -project insert_dylib.xcodeproj -scheme insert_dylib -configuration Release CODE_SIGNING_ALLOWED=NO
-          cp "$(find "$HOME/Library/Developer/Xcode/DerivedData" -type f -path "*/Build/Products/Release/insert_dylib" -print -quit)" ../insert_dylib_bin
+          xcodebuild -project insert_dylib.xcodeproj -scheme insert_dylib -configuration Release -derivedDataPath "$PWD/build" CODE_SIGNING_ALLOWED=NO
+          cp build/Build/Products/Release/insert_dylib ../insert_dylib_bin
           test -x ../insert_dylib_bin
 
       - name: Unpack IPA
@@ -38,12 +38,16 @@ jobs:
           APP="$(find Payload -maxdepth 1 -name '*.app' -print -quit)"
           test -n "$APP"
           echo "APP=$APP" >> "$GITHUB_ENV"
+          MIN_IOS=$(/usr/libexec/PlistBuddy -c 'Print :MinimumOSVersion' "$APP/Info.plist" 2>/dev/null || echo 15.0)
+          echo "MIN_IOS=$MIN_IOS" >> "$GITHUB_ENV"
 
       - name: Build native split hook
         run: |
           SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
-          xcrun --sdk iphoneos clang -arch arm64 -dynamiclib -fobjc-arc -miphoneos-version-min=15.0 -isysroot "$SDK" -framework UIKit -framework WebKit -framework CoreGraphics NativeSplit/APTVSplit.m -install_name @executable_path/Frameworks/APTVSplit.dylib -o APTVSplit.dylib
+          xcrun --sdk iphoneos clang -arch arm64 -dynamiclib -fobjc-arc -miphoneos-version-min="$MIN_IOS" -isysroot "$SDK" -framework UIKit -framework WebKit -framework CoreGraphics NativeSplit/APTVSplit.m -install_name @executable_path/Frameworks/APTVSplit.dylib -o APTVSplit.dylib
           mkdir -p "work/$APP/Frameworks"
+          file APTVSplit.dylib
+          xcrun vtool -show-build APTVSplit.dylib
           cp APTVSplit.dylib "work/$APP/Frameworks/APTVSplit.dylib"
 
       - name: Inject dylib
@@ -51,13 +55,24 @@ jobs:
           EXEC=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "work/$APP/Info.plist")
           chmod +x insert_dylib_bin
           ./insert_dylib_bin --all-yes "@executable_path/Frameworks/APTVSplit.dylib" "work/$APP/$EXEC"
+          otool -L "work/$APP/$EXEC" | grep -F "@executable_path/Frameworks/APTVSplit.dylib"
 
       - name: Ad-hoc sign and package
         run: |
-          codesign --force --sign - "work/$APP/Frameworks/APTVSplit.dylib"
-          codesign --force --deep --sign - "work/$APP"
+          APP_PATH="work/$APP"
+          codesign -d --entitlements :- "$APP_PATH" > /tmp/aptv-entitlements.plist 2>/dev/null || true
+          codesign --force --sign - "$APP_PATH/Frameworks/APTVSplit.dylib"
+          if plutil -lint /tmp/aptv-entitlements.plist >/dev/null 2>&1; then
+            codesign --force --deep --sign - --entitlements /tmp/aptv-entitlements.plist "$APP_PATH"
+          else
+            codesign --force --deep --sign - "$APP_PATH"
+          fi
+          codesign --verify --deep --strict "$APP_PATH"
           cd work
           zip -qry ../APTV-9.5.12-NativeSplit-unsigned.ipa Payload
+          cd ..
+          unzip -tq APTV-9.5.12-NativeSplit-unsigned.ipa
+          shasum -a 256 APTV-9.5.12-NativeSplit-unsigned.ipa
 
       - uses: actions/upload-artifact@v4
         with:
