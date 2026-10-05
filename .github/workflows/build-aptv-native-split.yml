@@ -12,6 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Fetch native split source
+        run: |
+          git fetch origin velora-1to1-port --depth=1
+          git checkout FETCH_HEAD -- NativeSplit/APTVSplit.m
+          test -s NativeSplit/APTVSplit.m
+
       - name: Download APTV 9.5.12 base IPA
         run: |
           curl -fL --retry 3 -o base.ipa "https://github.com/chuongnguyen89dn-ui/WebAPTV/releases/download/aptv-base-9.5.12/com.kimen.aptvpro_9.5.12_decrypted.ipa"
@@ -36,7 +42,7 @@ jobs:
       - name: Build native split hook
         run: |
           SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
-          xcrun --sdk iphoneos clang -arch arm64 -dynamiclib -fobjc-arc -miphoneos-version-min=15.0 -isysroot "$SDK" -framework UIKit -framework WebKit NativeSplit/APTVSplit.m -install_name @executable_path/Frameworks/APTVSplit.dylib -o APTVSplit.dylib
+          xcrun --sdk iphoneos clang -arch arm64 -dynamiclib -fobjc-arc -miphoneos-version-min=15.0 -isysroot "$SDK" -framework UIKit -framework WebKit -framework CoreGraphics NativeSplit/APTVSplit.m -install_name @executable_path/Frameworks/APTVSplit.dylib -o APTVSplit.dylib
           mkdir -p "work/$APP/Frameworks"
           cp APTVSplit.dylib "work/$APP/Frameworks/APTVSplit.dylib"
 
